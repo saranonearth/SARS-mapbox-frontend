@@ -2,6 +2,9 @@
   padding: 0;
   margin: 0;
 }
+body {
+  font-family: "Lato", sans-serif;
+}
 .map-container {
   position: absolute;
   top: 0;
@@ -9,6 +12,12 @@
   left: 0;
   right: 0;
 }
+
+/* #marker {
+  background-color: red;
+  width: 2400px;
+  height: 2400px;
+} */
 /* .marker {
   background-image: url("svg/marker.svg");
   background-size: cover;
@@ -17,3 +26,81 @@
   border-radius: 50%;
   cursor: pointer;
 } */
+.iconimg {
+  width: 25px;
+  height: 25px;
+}
+
+.openicon {
+  position: absolute;
+  background-color: rgb(63, 199, 169);
+  width: 50px;
+  height: 50px;
+  bottom: 10%;
+  right: 3%;
+  color: white;
+
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  border-radius: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  font-size: 1.2em !important;
+  transition: 0.5s;
+}
+.openicon:hover {
+  cursor: pointer;
+  width: 52px;
+  height: 52px;
+}
+
+.menu-cont {
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+  position: absolute;
+  right: 0;
+  z-index: 10;
+}
+.close-cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.close {
+  background-color: rgb(63, 199, 169);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  box-shadow: 0 50px 200px rgba(0, 0, 0, 0.9);
+  margin-right: -30px;
+  z-index: 20;
+  transition: 0.5s;
+}
+.close:hover {
+  cursor: pointer;
+  width: 62px;
+  height: 62px;
+}
+.menu {
+  background-color: white;
+  min-height: 100vh;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  padding: 20px;
+  transition: 0.5s;
+  border-radius: 11px;
+}
+
+h1 {
+  font-weight: 800;
+  font-size: 3em;
+}
