@@ -11,7 +11,7 @@ import marker from "../assets/marker.svg";
 import { line, POLYGON1 } from "../properties/pathdata";
 import { heatData } from "../properties/heat";
 const Track = (props) => {
-  const API_BASE_URL = "http://localhost:8000";
+  const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
   const flightId = props.match.params.id;
   const [state, setState] = useState({
     flightData: null,
@@ -112,13 +112,24 @@ const Track = (props) => {
     },
   };
   //circle prop
+  const metersToPixelsAtMaxZoom = (meters, latitude) =>
+    meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 
-  const getCirclePaint = () => ({
-    "circle-radius": 100,
+  const getCirclePaint = (data) => ({
+    "circle-radius": {
+      stops: [
+        [0, 0],
+        [
+          20,
+          metersToPixelsAtMaxZoom(5000, data && data.data.flightPath[105].lat),
+        ],
+      ],
+      base: 2,
+    },
     "circle-color": "#389cff",
     "circle-opacity": 0.5,
     "circle-stroke-width": 3,
-    "circle-stroke-color": "#0b71de",
+    "circle-stroke-color": "#ff002f",
   });
 
   //polygon prop
@@ -131,7 +142,7 @@ const Track = (props) => {
 
   return (
     <div>
-      <Sidebar />
+      <Sidebar data={state.flightData} />
 
       <Map
         style="mapbox://styles/mapbox/dark-v10"
@@ -171,7 +182,7 @@ const Track = (props) => {
           ))}
         </Layer> */}
 
-        <Layer type="circle" paint={getCirclePaint()}>
+        <Layer type="circle" paint={getCirclePaint(state.flightData)}>
           <Feature
             coordinates={[
               state.flightData && state.flightData.data.flightPath[105].long,
@@ -179,6 +190,9 @@ const Track = (props) => {
             ]}
           />
         </Layer>
+        {/* <Layer type="circle" paint={getCirclePaint(10.8083)}>
+          <Feature coordinates={[ 78.6801,10.8083]} />
+        </Layer> */}
         {/* <Layer type="circle" paint={getCirclePaint()}>
           <Feature coordinates={[50.82793, -0.168749]} />
         </Layer>

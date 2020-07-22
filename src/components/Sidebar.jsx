@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -19,7 +19,7 @@ const Sidebar = () => {
           <i className="fa fa-arrow-left" aria-hidden="true"></i>
         </div>
       ) : (
-        <Menu func_handleOpen={handleOpen} />
+        <Menu data={props.data} func_handleOpen={handleOpen} />
       )}
     </div>
   );
