@@ -1,9 +1,11 @@
+/* #353737 */
 * {
   padding: 0;
   margin: 0;
 }
 body {
   font-family: "Lato", sans-serif;
+  background-color: #191a1a;
 }
 .map-container {
   position: absolute;
@@ -103,4 +105,50 @@ body {
 h1 {
   font-weight: 800;
   font-size: 3em;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+.title {
+  color: rgb(63, 199, 169);
+  font-size: 6em;
+}
+
+input {
+  border: none;
+  height: 40px;
+  width: 350px;
+  background-color: #353737;
+  padding: 15px;
+  font-size: 1.5em;
+  color: white;
+}
+
+.btn-holder {
+  text-align: center;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+.btn {
+  background-color: rgb(90, 212, 186);
+  color: white;
+  font-size: 1.3em;
+  padding: 20px 40px;
+
+  width: max-content;
+}
+.btn:hover {
+  background-color: aquamarine;
+  cursor: pointer;
+}
+.north-west {
+  transform: rotate(-90deg);
 }

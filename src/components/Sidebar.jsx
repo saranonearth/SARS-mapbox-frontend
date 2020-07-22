@@ -16,7 +16,7 @@ const Sidebar = () => {
           }}
           className="openicon"
         >
-          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+          <i className="fa fa-arrow-left" aria-hidden="true"></i>
         </div>
       ) : (
         <Menu func_handleOpen={handleOpen} />
