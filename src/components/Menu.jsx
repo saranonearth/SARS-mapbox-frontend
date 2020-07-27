@@ -13,12 +13,12 @@ const Menu = ({ func_handleOpen, data }) => {
         <div>
           <div>
             <i class="fa fa-plane" aria-hidden="true"></i> &nbsp;
-            {data.data.planId}
+            {data && data.data.planId}
           </div>
           <div>
             <h1 className="head-1">
               {" "}
-              {data.data.source} - {data.data.destination}
+              {data && data.data.source} - {data && data.data.destination}
             </h1>
           </div>
         </div>

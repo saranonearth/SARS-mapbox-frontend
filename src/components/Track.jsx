@@ -17,34 +17,6 @@ const Track = (props) => {
     flightData: null,
   });
 
-  useEffect(() => {
-    let isCancelled = false;
-
-    const fetchFlightData = async () => {
-      try {
-        const FLIGHT_TRACK_RESPONSE = await axios.get(
-          `${API_BASE_URL}/flight-plan/${flightId}`
-        );
-
-        if (FLIGHT_TRACK_RESPONSE.status === 200) {
-          if (!isCancelled) {
-            setState({
-              ...state,
-              flightData: FLIGHT_TRACK_RESPONSE.data,
-            });
-          }
-        }
-      } catch (error) {
-        console.log("FETCH ERROR IN TRACK COMPONENT", error);
-      }
-    };
-
-    fetchFlightData();
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
-
   console.log(state);
 
   const token =
@@ -62,7 +34,7 @@ const Track = (props) => {
 
   const linePaint = {
     "line-color": "#4790E5",
-    "line-width": 5,
+    "line-width": 3,
   };
 
   //heatmap setting
@@ -111,6 +83,7 @@ const Track = (props) => {
       ],
     },
   };
+
   //circle prop
   const metersToPixelsAtMaxZoom = (meters, latitude) =>
     meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
@@ -134,18 +107,39 @@ const Track = (props) => {
 
   //polygon prop
   const polygonPaint = {
-    "fill-color": "#6F788A",
-    "fill-opacity": 0.7,
+    "fill-color": "red",
+    "fill-opacity": 0.4,
   };
 
   const mappedRoute = line.map((point) => [point.lng, point.lat]);
-
+  const dummy = [
+    {
+      lat: 21,
+      long: 45,
+    },
+    {
+      lat: 22.73694444,
+      long: 44.49527778,
+    },
+    {
+      lat: 22.26055556,
+      long: 42.61777778,
+    },
+    {
+      lat: 20.52444444,
+      long: 43.14472222,
+    },
+    {
+      lat: 21,
+      long: 45,
+    },
+  ];
   return (
     <div>
       <Sidebar data={state.flightData} />
 
       <Map
-        style="mapbox://styles/mapbox/dark-v10"
+        style="mapbox://styles/mapbox/satellite-v9"
         center={[78.704674, 10.790483]}
         zoom={[3]}
         containerStyle={{
@@ -154,7 +148,7 @@ const Track = (props) => {
         }}
       >
         <ZoomControl />
-        <Marker
+        {/* <Marker
           coordinates={[
             state.flightData && state.flightData.data.flightPath[0].long,
             state.flightData && state.flightData.data.flightPath[0].lat,
@@ -162,7 +156,7 @@ const Track = (props) => {
           anchor="center"
         >
           <img className="iconimg north-west" src={marker} />
-        </Marker>
+        </Marker> */}
 
         <Layer type="line" layout={lineLayout} paint={linePaint}>
           <Feature
@@ -176,20 +170,26 @@ const Track = (props) => {
           />
         </Layer>
 
+        <Layer type="line" layout={lineLayout} paint={linePaint}>
+          <Feature
+            coordinates={dummy.map((point) => [point.long, point.lat])}
+          />
+        </Layer>
+
         {/* <Layer type="heatmap" paint={layerPaint}>
           {heatData.map((el, index) => (
             <Feature key={index} coordinates={el.latlng} properties={el} />
           ))}
         </Layer> */}
 
-        <Layer type="circle" paint={getCirclePaint(state.flightData)}>
+        {/* <Layer type="circle" paint={getCirclePaint(state.flightData)}>
           <Feature
             coordinates={[
               state.flightData && state.flightData.data.flightPath[105].long,
               state.flightData && state.flightData.data.flightPath[105].lat,
             ]}
           />
-        </Layer>
+        </Layer> */}
         {/* <Layer type="circle" paint={getCirclePaint(10.8083)}>
           <Feature coordinates={[ 78.6801,10.8083]} />
         </Layer> */}
@@ -205,9 +205,19 @@ const Track = (props) => {
         <Layer type="circle" paint={getCirclePaint()}>
           <Feature coordinates={[15.6921, 46.3337]} />
         </Layer> */}
-        {/* <Layer type="fill" paint={polygonPaint}>
-          <Feature coordinates={POLYGON1} />
-        </Layer> */}
+        <Layer type="fill" paint={polygonPaint}>
+          <Feature
+            coordinates={[
+              [
+                [45, 21],
+                [44.49527778, 22.73694444],
+                [42.61777778, 22.26055556],
+                [43.14472222, 20.52444444],
+                [45, 21],
+              ],
+            ]}
+          />
+        </Layer>
       </Map>
     </div>
   );
