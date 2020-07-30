@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  fields1,
-  fields2,
-  searchCraft,
-  distressCraft,
-} from "../properties/HomeFields";
+import { fields1, searchCraft, distressCraft } from "../properties/HomeFields";
 
-const Home = () => {
+const Home = (props) => {
   const [state, setState] = useState({
     longitude: "",
     latitude: "",
@@ -55,17 +50,57 @@ const Home = () => {
       ...state,
       stateOfCraft: e.target.value,
       socScenario2:
-        e.target.value == "1"
+        e.target.value === "1"
           ? { socLat: "", socLong: "" }
           : { ...state.socScenario2 },
     });
   };
 
   const handleSubmit = (e) => {
+    const {
+      latitude,
+      longitude,
+      altitude,
+      groundSpeed,
+      verticalSpeed,
+      heading,
+      dateTimeLKP,
+      dcMeansOfNavigation,
+      dcTypeofcraft,
+      scMeansOfNavigation,
+      scTypeofcraft,
+      stateOfCraft,
+      socScenario2,
+    } = state;
     e.preventDefault();
     console.log(state);
+    props.history.push({
+      pathname: "/track",
+      state: {
+        data: {
+          longitude,
+          latitude,
+          altitude,
+          groundSpeed,
+          verticalSpeed,
+          heading,
+          timestampLKP: dateTimeLKP,
+          distressedCraft: {
+            meansOfNavigation: dcMeansOfNavigation,
+            typeOfCraft: dcTypeofcraft,
+          },
+          searchCraft: {
+            meansOfNavigation: scMeansOfNavigation,
+            typeOfCraft: scTypeofcraft,
+          },
+          stateOfCraft,
+          socScenario: socScenario2.socLat ? socScenario2 : null,
+          searchFacilityUsesDRNav: searchFacilityUsesDRNav,
+        },
+      },
+    });
   };
-  const [time, setTime] = useState();
+
   return (
     <div>
       <div className="container">
@@ -124,7 +159,7 @@ const Home = () => {
                         name="stateOfCraft"
                         id="radio2"
                         onChange={changeStateofCraft}
-                        checked={state.stateOfCraft == "1"}
+                        checked={state.stateOfCraft === "1"}
                       />{" "}
                       &nbsp;
                       <label htmlFor="scenario 1">Scenario 1</label>
@@ -146,7 +181,7 @@ const Home = () => {
                         name="stateOfCraft"
                         id="radio3"
                         onChange={changeStateofCraft}
-                        checked={state.stateOfCraft == "2"}
+                        checked={state.stateOfCraft === "2"}
                       />
                       &nbsp;
                       <label htmlFor="Scenario 2">Scenario 2</label>
@@ -163,7 +198,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {state.stateOfCraft == "2" ? (
+                  {state.stateOfCraft === "2" ? (
                     <>
                       <div>
                         <div className="form-field">

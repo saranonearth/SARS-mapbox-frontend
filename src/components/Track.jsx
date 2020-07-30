@@ -14,18 +14,21 @@ import {
   dummy,
   polygonPaint,
 } from "../properties/properties";
-import marker from "../assets/marker.svg";
-import { line, POLYGON1 } from "../properties/pathdata";
-import { heatData } from "../properties/heat";
+
+// import marker from "../assets/marker.svg";
+// import { line, POLYGON1 } from "../properties/pathdata";
+// import { heatData } from "../properties/heat";
 
 const Track = (props) => {
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
   const flightId = props.match.params.id;
   const [state, setState] = useState({
-    flightData: null,
+    homeData: null,
   });
-
-  console.log(state);
+  useEffect(() => {
+    const dataFromHome = props.history.location.state.data;
+  }, []);
+  console.log("this.props.", props);
 
   const token =
     "pk.eyJ1Ijoic2FyYW5vbmVhcnRoIiwiYSI6ImNrY21hZndsMDJhc28yc3AwanBmcWVwMDQifQ.DJ1Ba2dZDy-a3HC4ibPRdQ";
