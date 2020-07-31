@@ -4,6 +4,7 @@ import ReactMapboxGl, {
   Marker,
   Layer,
   Feature,
+  Popup,
 } from "react-mapbox-gl";
 import axios from "axios";
 
@@ -12,6 +13,7 @@ import {
   lineLayout,
   linePaint,
   dummy,
+  getCirclePaint,
   polygonPaint,
 } from "../properties/properties";
 
@@ -24,11 +26,11 @@ const Track = (props) => {
   const flightId = props.match.params.id;
   const [state, setState] = useState({
     homeData: null,
+    points: [],
   });
   useEffect(() => {
     const dataFromHome = props.history.location.state.data;
   }, []);
-  console.log("this.props.", props);
 
   const token =
     "pk.eyJ1Ijoic2FyYW5vbmVhcnRoIiwiYSI6ImNrY21hZndsMDJhc28yc3AwanBmcWVwMDQifQ.DJ1Ba2dZDy-a3HC4ibPRdQ";
@@ -37,9 +39,25 @@ const Track = (props) => {
     accessToken: token,
   });
 
+  const setPoints = (data) => {
+    console.log(data);
+    setState({
+      ...state,
+      points: [
+        {
+          latitude: data.lat,
+          longitutde: data.long,
+          trustValue: data.trustValue,
+          radius: data.radius,
+        },
+        ...state.points,
+      ],
+    });
+  };
+
   return (
     <div>
-      <Sidebar data={state.flightData} />
+      <Sidebar setPoints={setPoints} data={state.flightData} />
 
       <Map
         style="mapbox://styles/mapbox/satellite-v9"
@@ -79,20 +97,28 @@ const Track = (props) => {
           />
         </Layer>
 
+        {state.points.map((c, i) => (
+          <Popup
+            key={i}
+            coordinates={[c.longitutde, c.latitude]}
+            offset={{
+              bottom: [0, 0],
+            }}
+          >
+            <Layer type="circle" paint={getCirclePaint(c)}>
+              <Feature coordinates={[c.longitutde, c.latitude]} />
+            </Layer>
+            <p>Hey</p>
+          </Popup>
+        ))}
+
         {/* <Layer type="heatmap" paint={layerPaint}>
           {heatData.map((el, index) => (
             <Feature key={index} coordinates={el.latlng} properties={el} />
           ))}
         </Layer> */}
-
-        {/* <Layer type="circle" paint={getCirclePaint(state.flightData)}>
-          <Feature
-            coordinates={[
-              state.flightData && state.flightData.data.flightPath[105].long,
-              state.flightData && state.flightData.data.flightPath[105].lat,
-            ]}
-          />
-        </Layer> */}
+        {/*
+         */}
         {/* <Layer type="circle" paint={getCirclePaint(10.8083)}>
           <Feature coordinates={[ 78.6801,10.8083]} />
         </Layer> */}

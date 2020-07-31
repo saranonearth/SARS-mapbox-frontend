@@ -61,7 +61,7 @@ body {
 .menu-cont {
   display: flex;
   flex-direction: row;
-  width: 600px;
+  width: 455px;
   position: absolute;
   right: 0;
   z-index: 10;
@@ -81,7 +81,6 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 100%;
-  box-shadow: 0 50px 200px rgba(0, 0, 0, 0.9);
   margin-right: -30px;
   z-index: 20;
   transition: 0.5s;
@@ -92,8 +91,8 @@ body {
   height: 62px;
 }
 .menu {
-  background-color: white;
-  min-height: 100vh;
+  background-color: #191a1a;
+  min-height: 95.7vh;
   width: 100%;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
   z-index: 10;
@@ -101,7 +100,9 @@ body {
   transition: 0.5s;
   border-radius: 11px;
 }
-
+.white {
+  color: white;
+}
 h1 {
   font-weight: 800;
   font-size: 3em;
@@ -138,7 +139,7 @@ h1 {
   width: max-content;
 }
 .btn:hover {
-  background-color: aquamarine;
+  background-color: rgb(63, 199, 169);
   cursor: pointer;
 }
 .north-west {
@@ -309,4 +310,18 @@ input[type="radio"]:checked {
 .no-m {
   margin-left: 0 !important;
   margin-top: 20px;
+}
+.menu-cont-2 {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  justify-content: space-between !important;
+}
+.stretch {
+  width: 300px;
+  text-align: center;
+  border-radius: 8px;
+}
+.stretch:hover {
+  background-color: rgb(63, 199, 169);
 }

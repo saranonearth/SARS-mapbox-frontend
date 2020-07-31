@@ -66,10 +66,7 @@ export const getCirclePaint = (data) => ({
   "circle-radius": {
     stops: [
       [0, 0],
-      [
-        20,
-        metersToPixelsAtMaxZoom(5000, data && data.data.flightPath[105].lat),
-      ],
+      [20, metersToPixelsAtMaxZoom(data.radius * 1852, data.latitude)],
     ],
     base: 2,
   },

@@ -19,7 +19,11 @@ const Sidebar = (props) => {
           <i className="fa fa-arrow-left" aria-hidden="true"></i>
         </div>
       ) : (
-        <Menu data={props.data} func_handleOpen={handleOpen} />
+        <Menu
+          setPoints={props.setPoints}
+          data={props.data}
+          func_handleOpen={handleOpen}
+        />
       )}
     </div>
   );
