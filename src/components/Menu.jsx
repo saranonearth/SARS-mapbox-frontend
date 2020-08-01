@@ -10,6 +10,7 @@ const Menu = ({ func_handleOpen, data, setPoints }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Menu", state);
     setPoints(state);
   };
 

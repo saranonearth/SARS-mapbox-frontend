@@ -62,6 +62,17 @@ export const layerPaint = {
 export const metersToPixelsAtMaxZoom = (meters, latitude) =>
   meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 
+const circleColor = (data) => {
+  if (data >= 0 && data <= 25) {
+    return "#ff5975";
+  } else if (data > 25 && data <= 50) {
+    return "#de435d";
+  } else if (data > 50 && data <= 75) {
+    return "#c92a2a";
+  } else if (data > 75 && data <= 100) {
+    return "#c70606";
+  }
+};
 export const getCirclePaint = (data) => ({
   "circle-radius": {
     stops: [
@@ -70,10 +81,10 @@ export const getCirclePaint = (data) => ({
     ],
     base: 2,
   },
-  "circle-color": "#389cff",
-  "circle-opacity": 0.5,
+  "circle-color": circleColor(data.trustValue),
+  "circle-opacity": 0.4,
   "circle-stroke-width": 3,
-  "circle-stroke-color": "#ff002f",
+  "circle-stroke-color": "#06c1c7",
 });
 
 //polygon prop

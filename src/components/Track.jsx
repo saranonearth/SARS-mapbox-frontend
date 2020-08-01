@@ -128,7 +128,7 @@ const Track = (props) => {
           />
         </Layer> */}
 
-        {/* {state.points.map((c, i) => (
+        {state.points.map((c, i) => (
           <Popup
             key={i}
             coordinates={[c.longitutde, c.latitude]}
@@ -139,21 +139,11 @@ const Track = (props) => {
             </Layer>
             <p>{c.trustValue}</p>
           </Popup>
-        ))} */}
+        ))}
 
         {/* <Layer type="fill" paint={multiPolygonPaint}>
           <Feature coordinates={state.grid} />
         </Layer> */}
-
-        {state.gridData.map((c, i) => (
-          <Popup
-            key={i + Math.random()}
-            coordinates={[c.x, c.y]}
-            anchor="center"
-          >
-            {/* <p className="white">{Math.random()}</p> */}
-          </Popup>
-        ))}
       </Map>
     </div>
   );
