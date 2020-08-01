@@ -11,7 +11,7 @@ export const fields1 = [
   },
   {
     name: "altitude",
-    placeholder: "Altitude (Nautical mile)",
+    placeholder: "Altitude (meters)",
     type: "text",
   },
   {
@@ -21,7 +21,7 @@ export const fields1 = [
   },
   {
     name: "verticalSpeed",
-    placeholder: "Vertical Speed (Knot)",
+    placeholder: "Vertical Speed (feet/min)",
     type: "text",
   },
   {
