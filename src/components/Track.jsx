@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMapboxGl, {
   ZoomControl,
   Marker,
@@ -23,7 +23,7 @@ import { Redirect } from "react-router-dom";
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
-
+  const mapRef = useRef();
   const [state, setState] = useState({
     starting: {
       long: 75,
@@ -84,7 +84,7 @@ const Track = (props) => {
         console.log("ERROR IN TRACK FETCHING INITIAL DATUM", error);
       }
     };
-
+    console.log("MAP REF", mapRef.current);
     fetchData();
   }, []);
 
@@ -145,6 +145,7 @@ const Track = (props) => {
       />
 
       <Map
+        ref={(el) => (mapRef.current = el)}
         style="mapbox://styles/mapbox/satellite-v9"
         center={[state.starting.long, state.starting.lat]}
         zoom={[state.starting.zoom]}
