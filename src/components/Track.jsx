@@ -29,7 +29,30 @@ const Track = (props) => {
     gridData: [],
   });
   useEffect(() => {
-    console.log();
+    const dataFromHome = props.history.location.state.data;
+    console.log(dataFromHome);
+    const fetchData = async () => {
+      try {
+        const body = JSON.stringify(dataFromHome);
+        console.log("DATA POSTING", dataFromHome);
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        const response = await axios.post(
+          `${API_BASE_URL}/initial-datum`,
+          body,
+          config
+        );
+
+        console.log("TRACK DATA POST", response);
+      } catch (error) {
+        console.log("ERROR IN TRACK FETCHING INITIAL DATUM", error);
+      }
+    };
+
     let grid = [];
     let gridData = [];
     geojson.map((item, i) => {
@@ -49,6 +72,8 @@ const Track = (props) => {
       grid,
       gridData,
     });
+
+    fetchData();
   }, []);
 
   const token =

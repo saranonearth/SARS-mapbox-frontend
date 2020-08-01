@@ -10,10 +10,10 @@ const Home = (props) => {
     verticalSpeed: "",
     heading: "",
     dateTimeLKP: "",
-    dcMeansOfNavigation: "",
-    dcTypeofcraft: "",
-    scMeansOfNavigation: "",
-    scTypeofcraft: "",
+    dcMeansOfNavigation: "GNSS",
+    dcTypeofcraft: "Aircraft(more than 2 engines)",
+    scMeansOfNavigation: "GNSS",
+    scTypeofcraft: "Ship",
     stateOfCraft: "1",
     socScenario2: {
       socLat: "",
@@ -56,7 +56,18 @@ const Home = (props) => {
           : { ...state.socScenario2 },
     });
   };
-
+  const SOCHelper = (data) => {
+    switch (data) {
+      case "Aircraft(more than 2 engines)":
+        return "Aircraft_3";
+      case "Aircraft(twin-engine)":
+        return "Aircraft_2";
+      case "Aircraft(single-engine)":
+        return "Aircraft_1";
+      default:
+        return data;
+    }
+  };
   const handleSubmit = (e) => {
     const {
       latitude,
@@ -85,14 +96,14 @@ const Home = (props) => {
           groundSpeed,
           verticalSpeed,
           heading,
-          timestampLKP: dateTimeLKP,
+          timestampLKP: new Date(dateTimeLKP).valueOf(),
           distressedCraft: {
             meansOfNavigation: dcMeansOfNavigation,
-            typeOfCraft: dcTypeofcraft,
+            typeOfCraft: SOCHelper(dcTypeofcraft),
           },
           searchCraft: {
             meansOfNavigation: scMeansOfNavigation,
-            typeOfCraft: scTypeofcraft,
+            typeOfCraft: SOCHelper(scTypeofcraft),
           },
           stateOfCraft,
           socScenario: socScenario2.socLat ? socScenario2 : null,
