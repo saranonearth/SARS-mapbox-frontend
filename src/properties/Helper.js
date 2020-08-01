@@ -1,3 +1,4 @@
+import { differenceInHours, setQuarter } from "date-fns";
 export const SOCHelper = (data) => {
   switch (data) {
     case "Aircraft(more than 2 engines)":
@@ -9,6 +10,17 @@ export const SOCHelper = (data) => {
     default:
       return data;
   }
+};
+
+export const calculateRadius = (data, time) => {
+  const timeDiffinHours = differenceInHours(
+    new Date(time),
+    new Date(data.iTime)
+  );
+  console.log("TimeDiff", timeDiffinHours);
+  const drift = timeDiffinHours * 0.5;
+
+  return Math.sqrt(Math.pow(drift, 2) + Math.pow(data.radius, 2));
 };
 // let grid = [];
 // let gridData = [];

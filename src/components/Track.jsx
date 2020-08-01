@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMapboxGl, {
   ZoomControl,
   Marker,
@@ -18,12 +18,12 @@ import {
   polygonPaint,
 } from "../properties/properties";
 import geojson from "./geojson.json";
-import { Redirect } from "react-router-dom";
+import { calculateRadius } from "../properties/Helper";
 
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
-  const mapRef = useRef();
+
   const [state, setState] = useState({
     starting: {
       long: 75,
@@ -85,7 +85,7 @@ const Track = (props) => {
             long: fetchedData.circle
               ? eval(fetchedData.circle.longitude)
               : fetchedData.line.longitude,
-            zoom: 5,
+            zoom: 10,
           },
         });
         console.log(fetchedData);
@@ -93,7 +93,7 @@ const Track = (props) => {
         console.log("ERROR IN TRACK FETCHING INITIAL DATUM", error);
       }
     };
-    console.log("MAP REF", mapRef.current);
+
     fetchData();
   }, []);
 
@@ -119,6 +119,7 @@ const Track = (props) => {
           longitude: data.long,
           trustValue: data.trustValue,
           radius: data.radius,
+          calRadius: calculateRadius(data, new Date()),
           time: new Date(),
           iTime: new Date(data.iTime),
         },
@@ -127,24 +128,36 @@ const Track = (props) => {
     });
   };
 
-  const multiPolygonPaint = {
-    "fill-color": "#14d9a4",
-    "fill-opacity": 0.6,
-    "fill-outline-color": "#030bfc",
-  };
   console.log(state);
 
   const updateGrid = async () => {
-    // let data = [];
+    let data = [];
 
-    // state.points.map(point=>{
-    //   data = [{center:[point.latitude,point.longitude]}...data]
-    // })
+    console.log("POINTS AT THE TIME OF UPDATE GRID", state.points);
+    state.points.map((point) => {
+      data = [
+        {
+          center: [eval(point.latitude), eval(point.longitude)],
+          radius: eval(point.calRadius),
+          strip: [0.2, 0.1, 0.2],
+          trust: eval(point.trustValue),
+        },
+        ...data,
+      ];
+    });
+    console.log("DATA I AM SENDING FOR UPDATING GRID", data);
 
     try {
-      const response = await axios.post("https://cv-sih.herokuapp.com/grid");
+      const response = await axios.post(
+        "https://cv-sih.herokuapp.com/grid",
+        data
+      );
 
       console.log(response.data);
+
+      setState({
+        ...state,
+      });
     } catch (error) {
       console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
     }
@@ -159,7 +172,6 @@ const Track = (props) => {
       />
 
       <Map
-        ref={(el) => (mapRef.current = el)}
         style="mapbox://styles/mapbox/satellite-v9"
         center={[state.starting.long, state.starting.lat]}
         zoom={[state.starting.zoom]}
@@ -194,7 +206,14 @@ const Track = (props) => {
             coordinates={[c.longitude, c.latitude]}
             anchor="center"
           >
-            <Layer type="circle" paint={getCirclePaint(c)}>
+            <Layer
+              type="circle"
+              paint={getCirclePaint({
+                radius: c.calRadius,
+                latitude: c.latitude,
+                trustValue: c.trustValue,
+              })}
+            >
               <Feature coordinates={[c.longitude, c.latitude]} />
             </Layer>
             <p>{c.trustValue}</p>
