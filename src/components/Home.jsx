@@ -74,7 +74,7 @@ const Home = (props) => {
       socScenario2,
     } = state;
     e.preventDefault();
-    console.log(state);
+
     props.history.push({
       pathname: "/track",
       state: {
@@ -85,7 +85,7 @@ const Home = (props) => {
           groundSpeed,
           verticalSpeed,
           heading,
-          timestampLKP: new Date(dateTimeLKP).valueOf(),
+          timestampLKP: Math.round(new Date(dateTimeLKP).getTime() / 1000),
           distressedCraft: {
             meansOfNavigation: dcMeansOfNavigation,
             typeOfCraft: SOCHelper(dcTypeofcraft),

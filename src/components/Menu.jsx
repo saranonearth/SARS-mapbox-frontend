@@ -28,7 +28,8 @@ const Menu = ({ func_handleOpen, data, setPoints }) => {
         </div>
       </div>
       <div className="menu">
-        <h1 className="white">Sidebar</h1>
+        <h1 className="white">SARS</h1>
+
         <div className="menu-cont-2">
           <div className="d-1">
             <form onSubmit={handleSubmit}>

@@ -30,15 +30,17 @@ const Track = (props) => {
     grid: [],
     gridData: [],
     initialDatum: "",
+    initialRadius: null,
   });
 
   useEffect(() => {
     let fetchedData;
+    let initRadius;
 
     const fetchData = async () => {
       try {
         const body = JSON.stringify(dataFromHome);
-
+        console.log("SENDING DATA", dataFromHome);
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -46,16 +48,30 @@ const Track = (props) => {
         };
 
         const response = await axios.post(
-          `${API_BASE_URL}/initial-datum`,
+          `https://sars-headquaters-server.herokuapp.com/initial-datum`,
           body,
           config
         );
-
+        console.log(response);
         fetchedData = response.data.data;
+
+        console.log(fetchedData);
+        if (fetchedData.circle) {
+          const { x, y, driftError } = fetchedData.circle;
+          const X = x || 1;
+          const Y = y || 1;
+          const DE = driftError || 1;
+          console.log(X, Y, DE);
+          initRadius = Math.sqrt(
+            Math.pow(X, 2) + Math.pow(Y, 2) + Math.pow(DE, 2)
+          );
+          console.log("Radius", initRadius);
+        }
 
         setState({
           ...state,
           initialDatum: fetchedData,
+          initialRadius: initRadius,
         });
         console.log(fetchedData);
       } catch (error) {
@@ -80,7 +96,7 @@ const Track = (props) => {
       points: [
         {
           latitude: data.lat,
-          longitutde: data.long,
+          longitude: data.long,
           trustValue: data.trustValue,
           radius: data.radius,
         },
@@ -131,15 +147,44 @@ const Track = (props) => {
         {state.points.map((c, i) => (
           <Popup
             key={i}
-            coordinates={[c.longitutde, c.latitude]}
+            coordinates={[c.longitude, c.latitude]}
             anchor="center"
           >
             <Layer type="circle" paint={getCirclePaint(c)}>
-              <Feature coordinates={[c.longitutde, c.latitude]} />
+              <Feature coordinates={[c.longitude, c.latitude]} />
             </Layer>
             <p>{c.trustValue}</p>
           </Popup>
         ))}
+
+        {state.initialRadius && state.initialDatum.circle && (
+          <Popup
+            coordinates={[
+              eval(state.initialDatum.circle.longitude),
+              eval(state.initialDatum.circle.latitude),
+            ]}
+            anchor="center"
+          >
+            <Layer
+              type="circle"
+              paint={getCirclePaint({
+                latitude: state.initialDatum.circle.latitude,
+                radius: state.initialRadius / 1000,
+                trustValue: 105,
+              })}
+            >
+              <Feature
+                coordinates={[
+                  eval(state.initialDatum.circle.longitude),
+                  eval(state.initialDatum.circle.latitude),
+                ]}
+              />
+            </Layer>
+            <p>Long:{eval(state.initialDatum.circle.longitude)} </p>
+            <p> Lat:{eval(state.initialDatum.circle.latitude)}</p>
+            <p>Radius: {state.initialRadius / 1000}</p>
+          </Popup>
+        )}
 
         {/* <Layer type="fill" paint={multiPolygonPaint}>
           <Feature coordinates={state.grid} />
