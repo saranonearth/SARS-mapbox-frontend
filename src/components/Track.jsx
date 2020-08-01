@@ -170,6 +170,7 @@ const Track = (props) => {
 
         {state.initialRadius && state.initialDatum.circle && (
           <Popup
+            className="badge-1"
             coordinates={[
               eval(state.initialDatum.circle.longitude),
               eval(state.initialDatum.circle.latitude),
@@ -191,6 +192,9 @@ const Track = (props) => {
                 ]}
               />
             </Layer>
+            <div className="searchicon">
+              <i class="fas fa-binoculars" aria-hidden="true"></i>
+            </div>
             <p>long:{eval(state.initialDatum.circle.longitude)} </p>
             <p> lat:{eval(state.initialDatum.circle.latitude)}</p>
             <p>radius: {state.initialRadius}</p>

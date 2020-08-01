@@ -329,3 +329,21 @@ input[type="radio"]:checked {
   background: none !important;
   box-shadow: none !important;
 }
+.badge-1 {
+  background-color: #191a1a !important;
+  padding: 0 !important;
+  border-radius: 8px;
+  padding-right: 10px !important;
+  color: rgba(40, 255, 237, 0.7) !important;
+}
+.searchicon {
+  font-size: 3em;
+
+  background-color: #191a1a;
+  width: max-content;
+  text-align: center;
+  margin: auto;
+  margin-top: -0.9em;
+  padding: 8px;
+  border-radius: 50%;
+}
