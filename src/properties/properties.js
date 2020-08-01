@@ -72,7 +72,20 @@ const circleColor = (data) => {
   } else if (data > 50 && data <= 75) {
     return "#c92a2a";
   } else if (data > 75 && data <= 100) {
-    return "#c70606";
+    return "#ba0000";
+  }
+};
+const circleOpacity = (data) => {
+  if (data == 105) {
+    return 0.8;
+  } else if (data >= 0 && data <= 25) {
+    return 0.4;
+  } else if (data > 25 && data <= 50) {
+    return 0.5;
+  } else if (data > 50 && data <= 75) {
+    return 0.6;
+  } else if (data > 75 && data <= 100) {
+    return 0.8;
   }
 };
 export const getCirclePaint = (data) => ({
@@ -84,7 +97,7 @@ export const getCirclePaint = (data) => ({
     base: 2,
   },
   "circle-color": circleColor(data.trustValue),
-  "circle-opacity": 0.4,
+  "circle-opacity": circleOpacity(data.trustValue),
   "circle-stroke-width": 3,
   "circle-stroke-color": "#06c1c7",
 });
