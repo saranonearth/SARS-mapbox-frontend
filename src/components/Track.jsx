@@ -15,10 +15,13 @@ import {
   linePaint,
   dummy,
   getCirclePaint,
+  getPolygonPaint,
   polygonPaint,
+  getMultiPolyPaint,
 } from "../properties/properties";
-import geojson from "./geojson.json";
-import { calculateRadius } from "../properties/Helper";
+
+import { calculateRadius, parseGeoJson } from "../properties/Helper";
+import { setDate } from "date-fns";
 
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
@@ -155,13 +158,19 @@ const Track = (props) => {
 
       console.log(response.data);
 
+      const parsedGeoJsonData = parseGeoJson(response.data);
+
       setState({
         ...state,
+        grid: parsedGeoJsonData.grid,
+        gridData: parsedGeoJsonData.gridData,
       });
     } catch (error) {
       console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
     }
   };
+
+  console.log("STATE OF TRACK.jsx", state);
 
   return (
     <div>
@@ -200,6 +209,40 @@ const Track = (props) => {
           />
         </Layer> */}
 
+        {state.grid.length > 0 &&
+          state.grid.map((item, i) => (
+            <Layer type="fill" paint={getPolygonPaint(item.color)}>
+              <Feature coordinates={[item.points]} />
+            </Layer>
+          ))}
+
+        {state.gridData.length > 0 &&
+          state.gridData.map((item, i) => (
+            <Popup
+              key={i + Math.random()}
+              coordinates={[item.x, item.y]}
+              anchor="center"
+            >
+              {Math.floor(item.prob * 1000) / 1000}
+            </Popup>
+          ))}
+        {state.initialRadius && state.initialDatum.circle && (
+          <Layer
+            type="circle"
+            paint={getCirclePaint({
+              latitude: state.initialDatum.circle.latitude,
+              radius: state.initialRadius,
+              trustValue: 105,
+            })}
+          >
+            <Feature
+              coordinates={[
+                eval(state.initialDatum.circle.longitude),
+                eval(state.initialDatum.circle.latitude),
+              ]}
+            />
+          </Layer>
+        )}
         {state.points.map((c, i) => (
           <Popup
             key={i}
@@ -219,28 +262,6 @@ const Track = (props) => {
             <p>{c.trustValue}</p>
           </Popup>
         ))}
-
-        {state.initialRadius && state.initialDatum.circle && (
-          <Layer
-            type="circle"
-            paint={getCirclePaint({
-              latitude: state.initialDatum.circle.latitude,
-              radius: state.initialRadius,
-              trustValue: 105,
-            })}
-          >
-            <Feature
-              coordinates={[
-                eval(state.initialDatum.circle.longitude),
-                eval(state.initialDatum.circle.latitude),
-              ]}
-            />
-          </Layer>
-        )}
-
-        {/* <Layer type="fill" paint={multiPolygonPaint}>
-          <Feature coordinates={state.grid} />
-        </Layer> */}
       </Map>
     </div>
   );

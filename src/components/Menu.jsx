@@ -11,9 +11,14 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Menu", state);
     setPoints(state);
-    console.log("SIDEBAR", state);
+    setState({
+      lat: "",
+      long: "",
+      trustValue: "",
+      radius: "",
+      iTime: "",
+    });
   };
 
   const handleChange = (e) => {

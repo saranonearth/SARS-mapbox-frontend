@@ -107,7 +107,12 @@ export const polygonPaint = {
   "fill-color": "red",
   "fill-opacity": 0.4,
 };
-
+export const getPolygonPaint = (color) => {
+  return {
+    "fill-color": color,
+    "fill-opacity": 0.4,
+  };
+};
 export const mappedRoute = line.map((point) => [point.lng, point.lat]);
 export const dummy = [
   {
@@ -131,3 +136,10 @@ export const dummy = [
     long: 45,
   },
 ];
+
+export const getMultiPolyPaint = (data) => {
+  return {
+    "fill-color": data.color,
+    "fill-opacity": 0.5,
+  };
+};

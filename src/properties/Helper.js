@@ -22,17 +22,31 @@ export const calculateRadius = (data, time) => {
 
   return Math.sqrt(Math.pow(drift, 2) + Math.pow(data.radius, 2));
 };
-// let grid = [];
-// let gridData = [];
 
-// geojson.map((item, i) => {
-//   const coord = item.features[0].geometry.coordinates;
-//   grid = [coord, ...grid];
-//   gridData = [
-//     {
-//       x: (coord[0][0][0] + coord[0][2][0]) / 2,
-//       y: (coord[0][0][1] + coord[0][2][1]) / 2,
-//     },
-//     ...gridData,
-//   ];
-// });
+export const parseGeoJson = (geojson) => {
+  let grid = [];
+  let gridData = [];
+  geojson.map((item, i) => {
+    const coord = item.features[0].geometry.coordinates;
+    grid = [
+      {
+        points: coord,
+        color: item.color,
+      },
+      ...grid,
+    ];
+    gridData = [
+      {
+        x: (coord[0][0][0] + coord[0][2][0]) / 2,
+        y: (coord[0][0][1] + coord[0][2][1]) / 2,
+        prob: item.prob_dist,
+      },
+      ...gridData,
+    ];
+  });
+
+  return {
+    grid,
+    gridData,
+  };
+};
