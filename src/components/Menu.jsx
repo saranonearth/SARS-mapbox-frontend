@@ -13,6 +13,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
     e.preventDefault();
     console.log("Menu", state);
     setPoints(state);
+    console.log("SIDEBAR", state);
   };
 
   const handleChange = (e) => {

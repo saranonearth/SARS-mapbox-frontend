@@ -78,6 +78,15 @@ const Track = (props) => {
           homeData: dataFromHome,
           initialDatum: fetchedData,
           initialRadius: initRadius,
+          starting: {
+            lat: fetchedData.circle
+              ? eval(fetchedData.circle.latitude)
+              : fetchedData.line.latitude,
+            long: fetchedData.circle
+              ? eval(fetchedData.circle.longitude)
+              : fetchedData.line.longitude,
+            zoom: 5,
+          },
         });
         console.log(fetchedData);
       } catch (error) {
@@ -99,6 +108,11 @@ const Track = (props) => {
     console.log(data);
     setState({
       ...state,
+      starting: {
+        lat: data.lat,
+        long: data.long,
+        zoom: 5,
+      },
       points: [
         {
           latitude: data.lat,
@@ -106,7 +120,7 @@ const Track = (props) => {
           trustValue: data.trustValue,
           radius: data.radius,
           time: new Date(),
-          iTime: data.time,
+          iTime: new Date(data.iTime),
         },
         ...state.points,
       ],
