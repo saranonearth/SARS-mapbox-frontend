@@ -20,6 +20,7 @@ const Sidebar = (props) => {
         </div>
       ) : (
         <Menu
+          updateGrid={props.updateGrid}
           setPoints={props.setPoints}
           data={props.data}
           func_handleOpen={handleOpen}

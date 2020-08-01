@@ -1,32 +1,32 @@
 export const fields1 = [
   {
     name: "longitude",
-    placeholder: "Longitude",
+    placeholder: "Longitude (Degrees)",
     type: "text",
   },
   {
     name: "latitude",
-    placeholder: "Latitude",
+    placeholder: "Latitude (Degrees)",
     type: "text",
   },
   {
     name: "altitude",
-    placeholder: "Altitude",
+    placeholder: "Altitude (Nautical mile)",
     type: "text",
   },
   {
     name: "groundSpeed",
-    placeholder: "Ground Speed",
+    placeholder: "Ground Speed (Knot)",
     type: "text",
   },
   {
     name: "verticalSpeed",
-    placeholder: "Vertical Speed",
+    placeholder: "Vertical Speed (Knot)",
     type: "text",
   },
   {
     name: "heading",
-    placeholder: "Heading",
+    placeholder: "Heading (Degrees)",
     type: "text",
   },
   {

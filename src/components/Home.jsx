@@ -205,7 +205,7 @@ const Home = (props) => {
                     <>
                       <div>
                         <div className="form-field">
-                          <label htmlFor="soc-long">Longitude</label>
+                          <label htmlFor="soc-long">Longitude (Degrees)</label>
                           <br />
                           <input
                             onChange={handleSOCfieldChange}
@@ -216,7 +216,7 @@ const Home = (props) => {
                           />
                         </div>
                         <div className="form-field">
-                          <label htmlFor="soc-lat">Latitude</label>
+                          <label htmlFor="soc-lat">Latitude (Degrees)</label>
                           <br />
                           <input
                             onChange={handleSOCfieldChange}

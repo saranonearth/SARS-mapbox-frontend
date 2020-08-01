@@ -28,7 +28,7 @@ const Track = (props) => {
     starting: {
       long: 75,
       lat: 15,
-      zoom: 5,
+      zoom: 3,
     },
     homeData: null,
     points: [],
@@ -78,11 +78,6 @@ const Track = (props) => {
           homeData: dataFromHome,
           initialDatum: fetchedData,
           initialRadius: initRadius,
-          starting: {
-            long: dataFromHome.longitude,
-            lat: dataFromHome.latitude,
-            zoom: 3,
-          },
         });
         console.log(fetchedData);
       } catch (error) {
@@ -110,6 +105,8 @@ const Track = (props) => {
           longitude: data.long,
           trustValue: data.trustValue,
           radius: data.radius,
+          time: new Date(),
+          iTime: data.time,
         },
         ...state.points,
       ],
@@ -122,9 +119,30 @@ const Track = (props) => {
     "fill-outline-color": "#030bfc",
   };
   console.log(state);
+
+  const updateGrid = async () => {
+    // let data = [];
+
+    // state.points.map(point=>{
+    //   data = [{center:[point.latitude,point.longitude]}...data]
+    // })
+
+    try {
+      const response = await axios.post("https://cv-sih.herokuapp.com/grid");
+
+      console.log(response.data);
+    } catch (error) {
+      console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
+    }
+  };
+
   return (
     <div>
-      <Sidebar setPoints={setPoints} data={state.flightData} />
+      <Sidebar
+        updateGrid={updateGrid}
+        setPoints={setPoints}
+        data={state.flightData}
+      />
 
       <Map
         style="mapbox://styles/mapbox/satellite-v9"
@@ -169,36 +187,21 @@ const Track = (props) => {
         ))}
 
         {state.initialRadius && state.initialDatum.circle && (
-          <Popup
-            className="badge-1"
-            coordinates={[
-              eval(state.initialDatum.circle.longitude),
-              eval(state.initialDatum.circle.latitude),
-            ]}
-            anchor="center"
+          <Layer
+            type="circle"
+            paint={getCirclePaint({
+              latitude: state.initialDatum.circle.latitude,
+              radius: state.initialRadius,
+              trustValue: 105,
+            })}
           >
-            <Layer
-              type="circle"
-              paint={getCirclePaint({
-                latitude: state.initialDatum.circle.latitude,
-                radius: state.initialRadius,
-                trustValue: 105,
-              })}
-            >
-              <Feature
-                coordinates={[
-                  eval(state.initialDatum.circle.longitude),
-                  eval(state.initialDatum.circle.latitude),
-                ]}
-              />
-            </Layer>
-            <div className="searchicon">
-              <i class="fas fa-binoculars" aria-hidden="true"></i>
-            </div>
-            <p>long:{eval(state.initialDatum.circle.longitude)} </p>
-            <p> lat:{eval(state.initialDatum.circle.latitude)}</p>
-            <p>radius: {state.initialRadius}</p>
-          </Popup>
+            <Feature
+              coordinates={[
+                eval(state.initialDatum.circle.longitude),
+                eval(state.initialDatum.circle.latitude),
+              ]}
+            />
+          </Layer>
         )}
 
         {/* <Layer type="fill" paint={multiPolygonPaint}>
