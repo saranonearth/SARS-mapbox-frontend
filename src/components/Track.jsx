@@ -262,6 +262,44 @@ const Track = (props) => {
             <p>{c.trustValue}</p>
           </Popup>
         ))}
+        {state.points.map((c, i) => (
+          <Popup
+            key={i}
+            coordinates={[c.longitude, c.latitude]}
+            anchor="center"
+          >
+            <Layer
+              type="circle"
+              paint={getCirclePaint({
+                radius: c.calRadius * 2,
+                latitude: c.latitude,
+                trustValue: c.trustValue,
+              })}
+            >
+              <Feature coordinates={[c.longitude, c.latitude]} />
+            </Layer>
+            <p>{c.trustValue}</p>
+          </Popup>
+        ))}
+        {state.points.map((c, i) => (
+          <Popup
+            key={i}
+            coordinates={[c.longitude, c.latitude]}
+            anchor="center"
+          >
+            <Layer
+              type="circle"
+              paint={getCirclePaint({
+                radius: c.calRadius * 3,
+                latitude: c.latitude,
+                trustValue: c.trustValue,
+              })}
+            >
+              <Feature coordinates={[c.longitude, c.latitude]} />
+            </Layer>
+            <p>{c.trustValue}</p>
+          </Popup>
+        ))}
       </Map>
     </div>
   );
