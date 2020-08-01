@@ -42,6 +42,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                   value={state.long}
                   className="input-i"
                   type="text"
+                  required
                   name="long"
                 />
               </div>
@@ -52,6 +53,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                   onChange={handleChange}
                   value={state.lat}
                   className="input-i"
+                  required
                   type="text"
                   name="lat"
                 />
@@ -64,6 +66,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                   className="input-i"
                   value={state.radius}
                   type="text"
+                  required
                   name="radius"
                 />
               </div>
@@ -75,6 +78,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                   value={state.trustValue}
                   className="input-i"
                   type="text"
+                  required
                   name="trustValue"
                 />
               </div>
@@ -87,6 +91,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                   className="input-i"
                   type="datetime-local"
                   name="iTime"
+                  required
                 />
               </div>
               <div className="search-holder">
