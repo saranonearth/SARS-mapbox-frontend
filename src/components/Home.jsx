@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { fields1, searchCraft, distressCraft } from "../properties/HomeFields";
-
+import { SOCHelper } from "../properties/Helper";
 const Home = (props) => {
   const [state, setState] = useState({
     longitude: "",
@@ -56,18 +56,7 @@ const Home = (props) => {
           : { ...state.socScenario2 },
     });
   };
-  const SOCHelper = (data) => {
-    switch (data) {
-      case "Aircraft(more than 2 engines)":
-        return "Aircraft_3";
-      case "Aircraft(twin-engine)":
-        return "Aircraft_2";
-      case "Aircraft(single-engine)":
-        return "Aircraft_1";
-      default:
-        return data;
-    }
-  };
+
   const handleSubmit = (e) => {
     const {
       latitude,

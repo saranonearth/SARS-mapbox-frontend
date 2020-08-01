@@ -21,21 +21,24 @@ import geojson from "./geojson.json";
 import { Redirect } from "react-router-dom";
 
 const Track = (props) => {
+  const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
-  const flightId = props.match.params.id;
+
   const [state, setState] = useState({
     homeData: null,
     points: [],
     grid: [],
     gridData: [],
+    initialDatum: "",
   });
+
   useEffect(() => {
-    const dataFromHome = props.history.location.state.data;
-    console.log(dataFromHome);
+    let fetchedData;
+
     const fetchData = async () => {
       try {
         const body = JSON.stringify(dataFromHome);
-        console.log("DATA POSTING", dataFromHome);
+
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -48,31 +51,17 @@ const Track = (props) => {
           config
         );
 
-        console.log("TRACK DATA POST", response);
+        fetchedData = response.data.data;
+
+        setState({
+          ...state,
+          initialDatum: fetchedData,
+        });
+        console.log(fetchedData);
       } catch (error) {
         console.log("ERROR IN TRACK FETCHING INITIAL DATUM", error);
       }
     };
-
-    let grid = [];
-    let gridData = [];
-    geojson.map((item, i) => {
-      const coord = item.features[0].geometry.coordinates;
-      grid = [coord, ...grid];
-      gridData = [
-        {
-          x: (coord[0][0][0] + coord[0][2][0]) / 2,
-          y: (coord[0][0][1] + coord[0][2][1]) / 2,
-        },
-        ...gridData,
-      ];
-    });
-
-    setState({
-      ...state,
-      grid,
-      gridData,
-    });
 
     fetchData();
   }, []);
@@ -105,15 +94,12 @@ const Track = (props) => {
     "fill-opacity": 0.6,
     "fill-outline-color": "#030bfc",
   };
-
+  console.log(state);
   return (
     <div>
       <Sidebar setPoints={setPoints} data={state.flightData} />
 
       <Map
-        onZoom={(e) => {
-          console.log(e);
-        }}
         style="mapbox://styles/mapbox/satellite-v9"
         center={[78.704674, 10.790483]}
         zoom={[3]}
@@ -124,7 +110,7 @@ const Track = (props) => {
       >
         <ZoomControl />
 
-        <Layer type="line" layout={lineLayout} paint={linePaint}>
+        {/* <Layer type="line" layout={lineLayout} paint={linePaint}>
           <Feature
             coordinates={
               state.flightData &&
@@ -134,7 +120,7 @@ const Track = (props) => {
               ])
             }
           />
-        </Layer>
+        </Layer> */}
 
         {/* <Layer type="line" layout={lineLayout} paint={linePaint}>
           <Feature
@@ -142,7 +128,7 @@ const Track = (props) => {
           />
         </Layer> */}
 
-        {state.points.map((c, i) => (
+        {/* {state.points.map((c, i) => (
           <Popup
             key={i}
             coordinates={[c.longitutde, c.latitude]}
@@ -153,20 +139,17 @@ const Track = (props) => {
             </Layer>
             <p>{c.trustValue}</p>
           </Popup>
-        ))}
+        ))} */}
 
-        <Layer type="fill" paint={multiPolygonPaint}>
+        {/* <Layer type="fill" paint={multiPolygonPaint}>
           <Feature coordinates={state.grid} />
-        </Layer>
+        </Layer> */}
 
         {state.gridData.map((c, i) => (
           <Popup
             key={i + Math.random()}
             coordinates={[c.x, c.y]}
             anchor="center"
-            offset={{
-              bottom: [0, 0],
-            }}
           >
             {/* <p className="white">{Math.random()}</p> */}
           </Popup>
