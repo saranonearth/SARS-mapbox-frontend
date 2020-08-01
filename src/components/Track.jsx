@@ -25,6 +25,11 @@ const Track = (props) => {
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
 
   const [state, setState] = useState({
+    starting: {
+      long: 75,
+      lat: 15,
+      zoom: 5,
+    },
     homeData: null,
     points: [],
     grid: [],
@@ -48,7 +53,7 @@ const Track = (props) => {
         };
 
         const response = await axios.post(
-          `https://sars-headquaters-server.herokuapp.com/initial-datum`,
+          `${API_BASE_URL}/initial-datum`,
           body,
           config
         );
@@ -70,8 +75,14 @@ const Track = (props) => {
 
         setState({
           ...state,
+          homeData: dataFromHome,
           initialDatum: fetchedData,
           initialRadius: initRadius,
+          starting: {
+            long: dataFromHome.longitude,
+            lat: dataFromHome.latitude,
+            zoom: 3,
+          },
         });
         console.log(fetchedData);
       } catch (error) {
@@ -117,8 +128,8 @@ const Track = (props) => {
 
       <Map
         style="mapbox://styles/mapbox/satellite-v9"
-        center={[78.704674, 10.790483]}
-        zoom={[3]}
+        center={[state.starting.long, state.starting.lat]}
+        zoom={[state.starting.zoom]}
         containerStyle={{
           height: "100vh",
           width: "100%",
@@ -169,7 +180,7 @@ const Track = (props) => {
               type="circle"
               paint={getCirclePaint({
                 latitude: state.initialDatum.circle.latitude,
-                radius: state.initialRadius / 1000,
+                radius: state.initialRadius,
                 trustValue: 105,
               })}
             >
@@ -180,9 +191,9 @@ const Track = (props) => {
                 ]}
               />
             </Layer>
-            <p>Long:{eval(state.initialDatum.circle.longitude)} </p>
-            <p> Lat:{eval(state.initialDatum.circle.latitude)}</p>
-            <p>Radius: {state.initialRadius / 1000}</p>
+            <p>long:{eval(state.initialDatum.circle.longitude)} </p>
+            <p> lat:{eval(state.initialDatum.circle.latitude)}</p>
+            <p>radius: {state.initialRadius}</p>
           </Popup>
         )}
 
