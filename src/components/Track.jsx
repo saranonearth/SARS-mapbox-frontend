@@ -88,7 +88,7 @@ const Track = (props) => {
             long: fetchedData.circle
               ? eval(fetchedData.circle.longitude)
               : fetchedData.line.longitude,
-            zoom: 10,
+            zoom: 4,
           },
         });
         console.log(fetchedData);

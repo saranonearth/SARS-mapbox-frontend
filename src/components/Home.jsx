@@ -85,7 +85,7 @@ const Home = (props) => {
           groundSpeed,
           verticalSpeed,
           heading,
-          timestampLKP: new Date(dateTimeLKP),
+          timestampLKP: Date.now(dateTimeLKP),
           distressedCraft: {
             meansOfNavigation: dcMeansOfNavigation,
             typeOfCraft: SOCHelper(dcTypeofcraft),
