@@ -4,10 +4,11 @@ import ReactMapboxGl, {
   Marker,
   Layer,
   Feature,
+  GeoJSONLayer,
   Popup,
 } from "react-mapbox-gl";
 import axios from "axios";
-
+import MapboxGL from "mapbox-gl";
 import Sidebar from "./Sidebar";
 import {
   lineLayout,
@@ -16,10 +17,7 @@ import {
   getCirclePaint,
   polygonPaint,
 } from "../properties/properties";
-
-// import marker from "../assets/marker.svg";
-// import { line, POLYGON1 } from "../properties/pathdata";
-// import { heatData } from "../properties/heat";
+import geojson from "./geojson.json";
 
 const Track = (props) => {
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
@@ -27,9 +25,30 @@ const Track = (props) => {
   const [state, setState] = useState({
     homeData: null,
     points: [],
+    grid: [],
+    gridData: [],
   });
   useEffect(() => {
-    const dataFromHome = props.history.location.state.data;
+    console.log();
+    let grid = [];
+    let gridData = [];
+    geojson.map((item, i) => {
+      const coord = item.features[0].geometry.coordinates;
+      grid = [coord, ...grid];
+      gridData = [
+        {
+          x: (coord[0][0][0] + coord[0][2][0]) / 2,
+          y: (coord[0][0][1] + coord[0][2][1]) / 2,
+        },
+        ...gridData,
+      ];
+    });
+
+    setState({
+      ...state,
+      grid,
+      gridData,
+    });
   }, []);
 
   const token =
@@ -55,11 +74,20 @@ const Track = (props) => {
     });
   };
 
+  const multiPolygonPaint = {
+    "fill-color": "#14d9a4",
+    "fill-opacity": 0.6,
+    "fill-outline-color": "#030bfc",
+  };
+
   return (
     <div>
       <Sidebar setPoints={setPoints} data={state.flightData} />
 
       <Map
+        onZoom={(e) => {
+          console.log(e);
+        }}
         style="mapbox://styles/mapbox/satellite-v9"
         center={[78.704674, 10.790483]}
         zoom={[3]}
@@ -69,15 +97,6 @@ const Track = (props) => {
         }}
       >
         <ZoomControl />
-        {/* <Marker
-          coordinates={[
-            state.flightData && state.flightData.data.flightPath[0].long,
-            state.flightData && state.flightData.data.flightPath[0].lat,
-          ]}
-          anchor="center"
-        >
-          <img className="iconimg north-west" src={marker} />
-        </Marker> */}
 
         <Layer type="line" layout={lineLayout} paint={linePaint}>
           <Feature
@@ -91,62 +110,41 @@ const Track = (props) => {
           />
         </Layer>
 
-        <Layer type="line" layout={lineLayout} paint={linePaint}>
+        {/* <Layer type="line" layout={lineLayout} paint={linePaint}>
           <Feature
             coordinates={dummy.map((point) => [point.long, point.lat])}
           />
-        </Layer>
+        </Layer> */}
 
         {state.points.map((c, i) => (
           <Popup
             key={i}
             coordinates={[c.longitutde, c.latitude]}
-            offset={{
-              bottom: [0, 0],
-            }}
+            anchor="center"
           >
             <Layer type="circle" paint={getCirclePaint(c)}>
               <Feature coordinates={[c.longitutde, c.latitude]} />
             </Layer>
-            <p>Hey</p>
+            <p>{c.trustValue}</p>
           </Popup>
         ))}
 
-        {/* <Layer type="heatmap" paint={layerPaint}>
-          {heatData.map((el, index) => (
-            <Feature key={index} coordinates={el.latlng} properties={el} />
-          ))}
-        </Layer> */}
-        {/*
-         */}
-        {/* <Layer type="circle" paint={getCirclePaint(10.8083)}>
-          <Feature coordinates={[ 78.6801,10.8083]} />
-        </Layer> */}
-        {/* <Layer type="circle" paint={getCirclePaint()}>
-          <Feature coordinates={[50.82793, -0.168749]} />
+        <Layer type="fill" paint={multiPolygonPaint}>
+          <Feature coordinates={state.grid} />
         </Layer>
-        <Layer type="circle" paint={getCirclePaint()}>
-          <Feature coordinates={[46.3337, 15.6921]} />
-        </Layer>
-        <Layer type="circle" paint={getCirclePaint()}>
-          <Feature coordinates={[22.4172, 5.8975]} />
-        </Layer>
-        <Layer type="circle" paint={getCirclePaint()}>
-          <Feature coordinates={[15.6921, 46.3337]} />
-        </Layer> */}
-        <Layer type="fill" paint={polygonPaint}>
-          <Feature
-            coordinates={[
-              [
-                [45, 21],
-                [44.49527778, 22.73694444],
-                [42.61777778, 22.26055556],
-                [43.14472222, 20.52444444],
-                [45, 21],
-              ],
-            ]}
-          />
-        </Layer>
+
+        {state.gridData.map((c, i) => (
+          <Popup
+            key={i + Math.random()}
+            coordinates={[c.x, c.y]}
+            anchor="center"
+            offset={{
+              bottom: [0, 0],
+            }}
+          >
+            {/* <p className="white">{Math.random()}</p> */}
+          </Popup>
+        ))}
       </Map>
     </div>
   );
