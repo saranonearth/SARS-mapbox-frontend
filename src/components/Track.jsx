@@ -18,6 +18,7 @@ import {
   polygonPaint,
 } from "../properties/properties";
 import geojson from "./geojson.json";
+import { Redirect } from "react-router-dom";
 
 const Track = (props) => {
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";

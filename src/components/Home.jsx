@@ -134,6 +134,7 @@ const Home = (props) => {
                         className="input-i"
                         type={f.type}
                         name={f.name}
+                        required
                       />
                     </div>
                   ))}
@@ -153,6 +154,7 @@ const Home = (props) => {
                         value={state[f.name]}
                         className="select-css"
                         name={f.name}
+                        required
                       >
                         {f.options.map((op, i) => (
                           <option key={i + Math.random()} name={op}>
@@ -250,6 +252,7 @@ const Home = (props) => {
                         value={state[f.name]}
                         className="select-css"
                         name={f.name}
+                        required
                       >
                         {f.options.map((op, i) => (
                           <option key={i + Math.random()} name={op}>
