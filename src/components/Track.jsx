@@ -148,6 +148,20 @@ const Track = (props) => {
         ...data,
       ];
     });
+
+    data = [
+      {
+        center: [
+          eval(state.initialDatum.circle.latitude),
+          eval(state.initialDatum.circle.longitude),
+        ],
+        radius: state.initialRadius,
+        strip: [0.2, 0.1, 0.2],
+        trust: state.initialDatum.circle.trustVal,
+      },
+      ...data,
+    ];
+
     console.log("DATA I AM SENDING FOR UPDATING GRID", data);
 
     try {
