@@ -110,6 +110,8 @@ const Track = (props) => {
           calRadius: calculateRadius(data, new Date()),
           time: new Date(),
           iTime: new Date(data.iTime),
+          id: Math.random(),
+          color: data.trustValue,
         },
         ...state.points,
       ],
@@ -179,12 +181,49 @@ const Track = (props) => {
 
   console.log("STATE OF TRACK.jsx", state);
 
+  //Function to remove point circle
+  const removePoint = (id) => {
+    let oldPoints = state.points;
+    const newPointsList = oldPoints.filter((e) => e.id != id);
+
+    setState({
+      ...state,
+      points: newPointsList,
+    });
+  };
+
+  //Function to change point circle color on click
+  const changeColorOnClick = (id) => {
+    const oldPointsList = state.points;
+
+    const newList = oldPointsList.map((point) => {
+      if (point.id === id && point.color !== 106) {
+        return { ...point, color: 106 };
+      } else if (point.id === id) {
+        return { ...point, color: point.trustValue };
+      }
+
+      return { ...point };
+    });
+    console.log("NEW LIST", newList);
+    setState({
+      ...state,
+      points: newList,
+      starting: {
+        ...state.starting,
+        zoom: 7,
+      },
+    });
+  };
   return (
     <div>
       <Sidebar
+        removePoint={removePoint}
         updateGrid={updateGrid}
         setPoints={setPoints}
         data={state.flightData}
+        changeColorOnClick={changeColorOnClick}
+        points={state.points}
       />
 
       <Map
@@ -296,7 +335,7 @@ const Track = (props) => {
               paint={getCirclePaint({
                 radius: c.calRadius * 3,
                 latitude: c.latitude,
-                trustValue: c.trustValue,
+                trustValue: c.color,
               })}
             >
               <Feature coordinates={[c.longitude, c.latitude]} />
@@ -315,7 +354,7 @@ const Track = (props) => {
               paint={getCirclePaint({
                 radius: c.calRadius * 2,
                 latitude: c.latitude,
-                trustValue: c.trustValue,
+                trustValue: c.color,
               })}
             >
               <Feature coordinates={[c.longitude, c.latitude]} />
@@ -335,7 +374,7 @@ const Track = (props) => {
               paint={getCirclePaint({
                 radius: c.calRadius,
                 latitude: c.latitude,
-                trustValue: c.trustValue,
+                trustValue: c.color,
               })}
             >
               <Feature coordinates={[c.longitude, c.latitude]} />

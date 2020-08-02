@@ -3,6 +3,9 @@
   padding: 0;
   margin: 0;
 }
+html {
+  overflow-y: hidden;
+}
 body {
   font-family: "Lato", sans-serif;
   background-color: #191a1a;
@@ -378,4 +381,59 @@ input[type="radio"]:checked {
 .LKP {
   width: 20px;
   height: 200px;
+}
+.options {
+  display: flex;
+  flex-direction: row;
+}
+
+.form-btn,
+.see-points {
+  margin-right: 10px;
+  color: white;
+  background-color: rgb(90, 212, 186);
+  padding: 10px;
+}
+.form-btn:hover,
+.see-points:hover {
+  cursor: pointer;
+}
+.l-point {
+  color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  font-size: 1em;
+  border-bottom: 0.5px solid rgb(46, 45, 45);
+  padding-bottom: 20px;
+}
+.section-1 {
+  width: 10%;
+}
+
+.section-c {
+  width: 88%;
+}
+.section-c :hover {
+  cursor: pointer;
+}
+.section-r {
+  width: 2%;
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}
+
+.icon-men {
+  width: 80px;
+  height: 80px;
+}
+
+.points-list {
+  overflow: auto;
+  margin-top: 10px;
+  height: 90vh;
 }

@@ -20,6 +20,9 @@ const Sidebar = (props) => {
         </div>
       ) : (
         <Menu
+          changeColorOnClick={props.changeColorOnClick}
+          removePoint={props.removePoint}
+          points={props.points}
           updateGrid={props.updateGrid}
           setPoints={props.setPoints}
           data={props.data}
