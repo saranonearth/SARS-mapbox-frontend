@@ -19,8 +19,15 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
     e.preventDefault();
     const { latD, latDD, latMMMMM, longD, longMMMMM, longDD } = state;
 
+    const minsLong = Math.floor(longMMMMM);
+    const secsLong = (longMMMMM % 1) * 60;
+    const minsecLong = `${minsLong} ${secsLong}`;
+    const minsLat = Math.floor(latMMMMM);
+    const secsLat = (latMMMMM % 1) * 60;
+    const minsecLat = `${minsLat} ${secsLat}`;
+
     const coordWithSpaces2 = new Coordinate(
-      `${latDD} ${latMMMMM} ${latD} ${longDD} ${longMMMMM} ${longD}`
+      `${latDD} ${minsecLat} ${latD} ${longDD} ${minsecLong} ${longD}`
     );
 
     console.log(coordWithSpaces2.toDd());
