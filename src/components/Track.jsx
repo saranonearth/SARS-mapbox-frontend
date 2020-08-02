@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ReactMapboxGl, {
   ZoomControl,
-  Marker,
   Layer,
   Feature,
-  GeoJSONLayer,
   Popup,
 } from "react-mapbox-gl";
 import axios from "axios";
-import MapboxGL from "mapbox-gl";
-import Sidebar from "./Sidebar";
-import {
-  lineLayout,
-  linePaint,
-  dummy,
-  getCirclePaint,
-  getPolygonPaint,
-  polygonPaint,
-  getMultiPolyPaint,
-} from "../properties/properties";
 
+import Sidebar from "./Sidebar";
+import { getCirclePaint, getPolygonPaint } from "../properties/properties";
 import { calculateRadius, parseGeoJson } from "../properties/Helper";
-import { setDate } from "date-fns";
 
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
@@ -130,6 +118,11 @@ const Track = (props) => {
   console.log(state);
 
   const updateGrid = async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     let data = [];
 
     console.log("POINTS AT THE TIME OF UPDATE GRID", state.points);
@@ -162,8 +155,11 @@ const Track = (props) => {
 
     try {
       const response = await axios.post(
-        "https://cv-sih.herokuapp.com/grid",
-        data
+        "https://cv-sih.herokuapp.com/circle",
+        {
+          circle: data,
+        },
+        config
       );
 
       console.log(response.data);

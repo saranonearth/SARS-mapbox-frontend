@@ -20,10 +20,12 @@ const Home = (props) => {
     scMeansOfNavigation: "GNSS",
     scTypeofcraft: "Ship",
     stateOfCraft: "1",
-    socScenario2: {
-      socLat: "",
-      socLong: "",
-    },
+    slatDD: "",
+    slatMMMMM: "",
+    slatD: "N",
+    slongDD: "",
+    slongMMMMM: "",
+    slongD: "E",
   });
 
   const [searchFacilityUsesDRNav, setSearchFacilityUsesDRNav] = useState(false);
@@ -35,15 +37,15 @@ const Home = (props) => {
     });
   };
 
-  const handleSOCfieldChange = (e) => {
-    setState({
-      ...state,
-      socScenario2: {
-        ...state.socScenario2,
-        [e.target.name]: e.target.value,
-      },
-    });
-  };
+  // const handleSOCfieldChange = (e) => {
+  //   setState({
+  //     ...state,
+  //     socScenario2: {
+  //       ...state.socScenario2,
+  //       [e.target.name]: e.target.value,
+  //     },
+  //   });
+  // };
   const handleSelectChange = (e) => {
     setState({
       ...state,
@@ -83,34 +85,37 @@ const Home = (props) => {
       scTypeofcraft,
       stateOfCraft,
       socScenario2,
+      slatDD,
+      slatMMMMM,
+      slatD,
+      slongDD,
+      slongMMMMM,
+      slongD,
     } = state;
     e.preventDefault();
-    let NEWsocScenario2 = {};
+    let NEWsocScenario2 = null;
 
-    if (socScenario2) {
+    const coordWithSpaces2 = new Coordinate(
+      `${latDD} ${latMMMMM} ${latD} ${longDD} ${longMMMMM} ${longD}`
+    );
+    const latlong = coordWithSpaces2.toDd();
+
+    const coordWithSpaces1 = new Coordinate(
+      `${slatDD} ${slatMMMMM} ${slatD} ${slongDD} ${slongMMMMM} ${slongD}`
+    );
+    const latlong1 = coordWithSpaces1.toDd();
+
+    if (stateOfCraft === "2") {
       NEWsocScenario2 = {
-        latitude: socScenario2.socLat,
-        longitude: socScenario2.socLong,
+        latitude: latlong1[0],
+        longitude: latlong1[1],
       };
     }
 
     console.log(state);
 
-    const minsLong = Math.floor(longMMMMM);
-    const secsLong = (longMMMMM % 1) * 60;
-    const minsecLong = `${minsLong} ${secsLong}`;
-    const minsLat = Math.floor(latMMMMM);
-    const secsLat = (latMMMMM % 1) * 60;
-    const minsecLat = `${minsLat} ${secsLat}`;
-
-    const coordWithSpaces2 = new Coordinate(
-      `${latDD} ${minsecLat} ${latD} ${longDD} ${minsecLong} ${longD}`
-    );
-    console.log(coordWithSpaces2.toDd());
-    const latlong = coordWithSpaces2.toDd();
-
     console.log(latlong);
-
+    console.log("SCEN 2 LATLONG", latlong1);
     props.history.push({
       pathname: "/track",
       state: {
@@ -131,7 +136,7 @@ const Home = (props) => {
             typeOfCraft: SOCHelper(scTypeofcraft),
           },
           stateOfCraft,
-          socScenario: socScenario2.socLat ? NEWsocScenario2 : null,
+          socScenario: NEWsocScenario2 ? NEWsocScenario2 : null,
           searchFacilityUsesDRNav: searchFacilityUsesDRNav,
         },
       },
@@ -170,7 +175,7 @@ const Home = (props) => {
                         value={state.longMMMMM}
                         onChange={changeFields1}
                         type="text"
-                        placeholder="MMMMM"
+                        placeholder="MM SS"
                         name="longMMMMM"
                         required
                       />
@@ -210,7 +215,7 @@ const Home = (props) => {
                         className="input-i k"
                         type="text"
                         value={state.latMMMMM}
-                        placeholder="MMMMM"
+                        placeholder="MM SS"
                         name="latMMMMM"
                         required
                       />
@@ -223,8 +228,8 @@ const Home = (props) => {
                           className="select-css min"
                           name="latD"
                         >
-                          <option value="E">N</option>
-                          <option value="W">S</option>
+                          <option value="N">N</option>
+                          <option value="S">S</option>
                         </select>
                       </div>
                     </div>
@@ -319,28 +324,80 @@ const Home = (props) => {
                   </div>
                   {state.stateOfCraft === "2" ? (
                     <>
-                      <div>
+                      <div className="coord">
                         <div className="form-field">
-                          <label htmlFor="soc-long">Longitude (Degrees)</label>
+                          <label htmlFor="">Longitude</label>
                           <br />
                           <input
-                            onChange={handleSOCfieldChange}
-                            value={state.socScenario2.socLong}
-                            className="input-i"
+                            placeholder="DD"
+                            onChange={changeFields1}
+                            value={state.slongDD}
+                            className="input-i k"
                             type="text"
-                            name="socLong"
+                            name="slongDD"
                           />
                         </div>
                         <div className="form-field">
-                          <label htmlFor="soc-lat">Latitude (Degrees)</label>
                           <br />
                           <input
-                            onChange={handleSOCfieldChange}
-                            value={state.socScenario2.socLat}
-                            className="input-i"
+                            className="input-i k"
+                            value={state.slongMMMMM}
+                            onChange={changeFields1}
                             type="text"
-                            name="socLat"
+                            placeholder="MM SS"
+                            name="slongMMMMM"
                           />
+                        </div>
+                        <div className="form-field cen-v">
+                          <div>
+                            <select
+                              value={state.slongD}
+                              onChange={changeFields1}
+                              className="select-css min"
+                              name="slongD"
+                            >
+                              <option value="E">E</option>
+                              <option value="W">W</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="coord">
+                        <div className="form-field">
+                          <label htmlFor="">Latitude</label>
+                          <br />
+                          <input
+                            onChange={changeFields1}
+                            placeholder="DD"
+                            value={state.slatDD}
+                            className="input-i k"
+                            type="text"
+                            name="slatDD"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <br />
+                          <input
+                            onChange={changeFields1}
+                            className="input-i k"
+                            type="text"
+                            value={state.slatMMMMM}
+                            placeholder="MM SS"
+                            name="slatMMMMM"
+                          />
+                        </div>
+                        <div className="form-field cen-v">
+                          <div>
+                            <select
+                              onChange={changeFields1}
+                              value={state.slatD}
+                              className="select-css min"
+                              name="slatD"
+                            >
+                              <option value="N">N</option>
+                              <option value="S">S</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </>

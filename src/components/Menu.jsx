@@ -20,16 +20,8 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
     console.log("MENU", state);
     const { latD, latDD, latMMMMM, longD, longMMMMM, longDD } = state;
 
-    const minsLong = Math.floor(longMMMMM);
-    const secsLong = (longMMMMM % 1) * 60;
-    const minsecLong = `${minsLong} ${secsLong}`;
-
-    const minsLat = Math.floor(latMMMMM);
-    const secsLat = (latMMMMM % 1) * 60;
-    const minsecLat = `${minsLat} ${secsLat}`;
-
     const coordWithSpaces2 = new Coordinate(
-      `${latDD} ${minsecLat} ${latD} ${longDD} ${minsecLong} ${longD}`
+      `${latDD} ${latMMMMM} ${latD} ${longDD} ${longMMMMM} ${longD}`
     );
 
     let latlong = coordWithSpaces2.toDd();
@@ -102,7 +94,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                     value={state.longMMMMM}
                     onChange={handleChange}
                     type="text"
-                    placeholder="MMMMM"
+                    placeholder="MM SS"
                     name="longMMMMM"
                     required
                   />
@@ -142,7 +134,7 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                     className="input-i k"
                     type="text"
                     value={state.latMMMMM}
-                    placeholder="MMMMM"
+                    placeholder="MM SS"
                     name="latMMMMM"
                     required
                   />
@@ -155,8 +147,8 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
                       className="select-css min"
                       name="latD"
                     >
-                      <option value="E">N</option>
-                      <option value="W">S</option>
+                      <option value="N">N</option>
+                      <option value="S">S</option>
                     </select>
                   </div>
                 </div>
