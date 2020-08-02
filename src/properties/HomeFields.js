@@ -1,15 +1,5 @@
 export const fields1 = [
   {
-    name: "longitude",
-    placeholder: "Longitude (Degrees)",
-    type: "text",
-  },
-  {
-    name: "latitude",
-    placeholder: "Latitude (Degrees)",
-    type: "text",
-  },
-  {
     name: "altitude",
     placeholder: "Altitude (feet)",
     type: "text",

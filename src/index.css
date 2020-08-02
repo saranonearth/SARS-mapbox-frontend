@@ -347,3 +347,25 @@ input[type="radio"]:checked {
   padding: 8px;
   border-radius: 50%;
 }
+
+.coord {
+  display: flex;
+  flex-direction: row;
+}
+
+.k {
+  width: 130px;
+  margin-right: 5px;
+}
+
+.cen-v {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.min {
+  width: 50px !important;
+  margin-top: 22px !important;
+  height: 56px !important;
+}

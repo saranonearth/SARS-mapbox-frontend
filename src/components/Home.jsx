@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { fields1, searchCraft, distressCraft } from "../properties/HomeFields";
 import { SOCHelper } from "../properties/Helper";
+import Coordinate from "coordinates-converter";
 const Home = (props) => {
   const [state, setState] = useState({
-    longitude: "",
-    latitude: "",
+    latDD: "",
+    latMMMMM: "",
+    latD: "N",
+    longDD: "",
+    longMMMMM: "",
+    longD: "E",
     altitude: "",
     groundSpeed: "",
     verticalSpeed: "",
@@ -59,6 +64,12 @@ const Home = (props) => {
 
   const handleSubmit = (e) => {
     const {
+      latD,
+      longD,
+      latMMMMM,
+      longMMMMM,
+      latDD,
+      longDD,
       latitude,
       longitude,
       altitude,
@@ -75,12 +86,19 @@ const Home = (props) => {
     } = state;
     e.preventDefault();
 
+    console.log(state);
+
+    const coordWithSpaces2 = new Coordinate(
+      `${latDD} ${latMMMMM} ${latD} ${longDD} ${longMMMMM} ${longD}`
+    );
+    console.log(coordWithSpaces2.toDd());
+    const latlong = coordWithSpaces2.toDd();
     props.history.push({
       pathname: "/track",
       state: {
         data: {
-          longitude,
-          latitude,
+          longitude: latlong[1],
+          latitude: latlong[0],
           altitude,
           groundSpeed,
           verticalSpeed,
@@ -113,6 +131,86 @@ const Home = (props) => {
             <div className="cont">
               <div className="sec1">
                 <div className="holder1">
+                  <div className="coord">
+                    <div className="form-field">
+                      <label htmlFor="">Longitude</label>
+                      <br />
+                      <input
+                        placeholder="DD"
+                        onChange={changeFields1}
+                        value={state.longDD}
+                        className="input-i k"
+                        type="text"
+                        name="longDD"
+                        required
+                      />
+                    </div>
+                    <div className="form-field">
+                      <br />
+                      <input
+                        className="input-i k"
+                        value={state.longMMMMM}
+                        onChange={changeFields1}
+                        type="text"
+                        placeholder="MMMMM"
+                        name="longMMMMM"
+                        required
+                      />
+                    </div>
+                    <div className="form-field cen-v">
+                      <div>
+                        <select
+                          value={state.longD}
+                          onChange={changeFields1}
+                          className="select-css min"
+                          name="longD"
+                        >
+                          <option value="E">E</option>
+                          <option value="W">W</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="coord">
+                    <div className="form-field">
+                      <label htmlFor="">Latitude</label>
+                      <br />
+                      <input
+                        onChange={changeFields1}
+                        placeholder="DD"
+                        value={state.latDD}
+                        className="input-i k"
+                        type="text"
+                        name="latDD"
+                        required
+                      />
+                    </div>
+                    <div className="form-field">
+                      <br />
+                      <input
+                        onChange={changeFields1}
+                        className="input-i k"
+                        type="text"
+                        value={state.latMMMMM}
+                        placeholder="MMMMM"
+                        name="latMMMMM"
+                        required
+                      />
+                    </div>
+                    <div className="form-field cen-v">
+                      <div>
+                        <select
+                          onChange={changeFields1}
+                          value={state.latD}
+                          className="select-css min"
+                          name="latD"
+                        >
+                          <option value="E">N</option>
+                          <option value="W">S</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   {fields1.map((f, i) => (
                     <div key={i} className="form-field">
                       <label htmlFor="">{f.placeholder}</label>
