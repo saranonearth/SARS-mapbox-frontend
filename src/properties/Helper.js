@@ -18,7 +18,7 @@ export const calculateRadius = (data, time) => {
     new Date(data.iTime)
   );
   console.log("TimeDiff", timeDiffinHours);
-  const drift = timeDiffinHours * 0.5;
+  const drift = timeDiffinHours * 0.3;
 
   return Math.sqrt(Math.pow(drift, 2) + Math.pow(data.radius, 2));
 };
