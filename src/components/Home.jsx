@@ -85,6 +85,14 @@ const Home = (props) => {
       socScenario2,
     } = state;
     e.preventDefault();
+    let NEWsocScenario2 = {};
+
+    if (socScenario2) {
+      NEWsocScenario2 = {
+        latitude: socScenario2.socLat,
+        longitude: socScenario2.socLong,
+      };
+    }
 
     console.log(state);
 
@@ -123,7 +131,7 @@ const Home = (props) => {
             typeOfCraft: SOCHelper(scTypeofcraft),
           },
           stateOfCraft,
-          socScenario: socScenario2.socLat ? socScenario2 : null,
+          socScenario: socScenario2.socLat ? NEWsocScenario2 : null,
           searchFacilityUsesDRNav: searchFacilityUsesDRNav,
         },
       },

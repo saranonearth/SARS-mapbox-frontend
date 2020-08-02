@@ -17,11 +17,13 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("MENU", state);
     const { latD, latDD, latMMMMM, longD, longMMMMM, longDD } = state;
 
     const minsLong = Math.floor(longMMMMM);
     const secsLong = (longMMMMM % 1) * 60;
     const minsecLong = `${minsLong} ${secsLong}`;
+
     const minsLat = Math.floor(latMMMMM);
     const secsLat = (latMMMMM % 1) * 60;
     const minsecLat = `${minsLat} ${secsLat}`;
@@ -30,23 +32,29 @@ const Menu = ({ func_handleOpen, data, setPoints, updateGrid }) => {
       `${latDD} ${minsecLat} ${latD} ${longDD} ${minsecLong} ${longD}`
     );
 
-    console.log(coordWithSpaces2.toDd());
+    let latlong = coordWithSpaces2.toDd();
 
-    const latlong = coordWithSpaces2.toDd();
     console.log(latlong);
-    setPoints({
-      ...state,
-      lat: latlong[0],
+
+    let newSendState = {
+      trustValue: state.trustValue,
+      iTime: state.iTime,
+      radius: state.radius,
       long: latlong[1],
-    });
+      lat: latlong[0],
+    };
+
+    console.log("NEW MENU STATE", newSendState);
+    setPoints(newSendState);
+
     setState({
       lat: "",
       long: "",
       trustValue: "",
       radius: "",
       iTime: "",
-      latD: "",
-      longD: "",
+      latD: "N",
+      longD: "E",
       latMMMMM: "",
       longMMMMM: "",
       latDD: "",

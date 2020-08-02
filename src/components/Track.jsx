@@ -82,12 +82,8 @@ const Track = (props) => {
           initialDatum: fetchedData,
           initialRadius: initRadius,
           starting: {
-            lat: fetchedData.circle
-              ? eval(fetchedData.circle.latitude)
-              : fetchedData.line.latitude,
-            long: fetchedData.circle
-              ? eval(fetchedData.circle.longitude)
-              : fetchedData.line.longitude,
+            lat: fetchedData.circle ? eval(fetchedData.circle.latitude) : 10,
+            long: fetchedData.circle ? eval(fetchedData.circle.longitude) : 75,
             zoom: 8,
           },
         });
@@ -108,7 +104,7 @@ const Track = (props) => {
   });
 
   const setPoints = (data) => {
-    console.log(data);
+    console.log("DATA FROM MENU", data);
     setState({
       ...state,
       starting: {
@@ -134,7 +130,26 @@ const Track = (props) => {
   console.log(state);
 
   const updateGrid = async () => {
-    let data = [];
+    let data = [
+      {
+        center: [10.171054833622044, 75.87038261100483],
+        radius: 5.251052195950642,
+        strip: [0.5, 0.2, 0.1],
+        trust: 75,
+      },
+      {
+        center: [10.337583, 75.420917],
+        radius: 10.530432089900206,
+        strip: [0.5, 0.2, 0.1],
+        trust: 57,
+      },
+      {
+        center: [10.420933, 75.872667],
+        radius: 4.686149805543993,
+        strip: [0.5, 0.2, 0.1],
+        trust: 25,
+      },
+    ];
 
     console.log("POINTS AT THE TIME OF UPDATE GRID", state.points);
     state.points.map((point) => {
