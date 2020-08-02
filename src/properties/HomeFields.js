@@ -11,7 +11,7 @@ export const fields1 = [
   },
   {
     name: "altitude",
-    placeholder: "Altitude (meters)",
+    placeholder: "Altitude (feet)",
     type: "text",
   },
   {

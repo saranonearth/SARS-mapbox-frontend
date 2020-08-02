@@ -88,7 +88,7 @@ const Track = (props) => {
             long: fetchedData.circle
               ? eval(fetchedData.circle.longitude)
               : fetchedData.line.longitude,
-            zoom: 4,
+            zoom: 8,
           },
         });
         console.log(fetchedData);
@@ -114,7 +114,7 @@ const Track = (props) => {
       starting: {
         lat: data.lat,
         long: data.long,
-        zoom: 5,
+        zoom: 10,
       },
       points: [
         {
@@ -245,6 +245,40 @@ const Track = (props) => {
             type="circle"
             paint={getCirclePaint({
               latitude: state.initialDatum.circle.latitude,
+              radius: state.initialRadius * 3,
+              trustValue: 105,
+            })}
+          >
+            <Feature
+              coordinates={[
+                eval(state.initialDatum.circle.longitude),
+                eval(state.initialDatum.circle.latitude),
+              ]}
+            />
+          </Layer>
+        )}
+        {state.initialRadius && state.initialDatum.circle && (
+          <Layer
+            type="circle"
+            paint={getCirclePaint({
+              latitude: state.initialDatum.circle.latitude,
+              radius: state.initialRadius * 2,
+              trustValue: 105,
+            })}
+          >
+            <Feature
+              coordinates={[
+                eval(state.initialDatum.circle.longitude),
+                eval(state.initialDatum.circle.latitude),
+              ]}
+            />
+          </Layer>
+        )}
+        {state.initialRadius && state.initialDatum.circle && (
+          <Layer
+            type="circle"
+            paint={getCirclePaint({
+              latitude: state.initialDatum.circle.latitude,
               radius: state.initialRadius,
               trustValue: 105,
             })}
@@ -266,7 +300,7 @@ const Track = (props) => {
             <Layer
               type="circle"
               paint={getCirclePaint({
-                radius: c.calRadius,
+                radius: c.calRadius * 3,
                 latitude: c.latitude,
                 trustValue: c.trustValue,
               })}
@@ -295,6 +329,7 @@ const Track = (props) => {
             <p>{c.trustValue}</p>
           </Popup>
         ))}
+
         {state.points.map((c, i) => (
           <Popup
             key={i}
@@ -304,7 +339,7 @@ const Track = (props) => {
             <Layer
               type="circle"
               paint={getCirclePaint({
-                radius: c.calRadius * 3,
+                radius: c.calRadius,
                 latitude: c.latitude,
                 trustValue: c.trustValue,
               })}

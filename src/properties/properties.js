@@ -64,7 +64,7 @@ export const metersToPixelsAtMaxZoom = (meters, latitude) =>
 
 const circleColor = (data) => {
   if (data === 105) {
-    return "#f0c441";
+    return "#42a7f5";
   } else if (data >= 0 && data <= 25) {
     return "#ff5975";
   } else if (data > 25 && data <= 50) {
@@ -77,7 +77,7 @@ const circleColor = (data) => {
 };
 const circleOpacity = (data) => {
   if (data === 105) {
-    return 0.8;
+    return 0.5;
   } else if (data >= 0 && data <= 25) {
     return 0.4;
   } else if (data > 25 && data <= 50) {
