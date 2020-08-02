@@ -15,19 +15,6 @@ body {
   right: 0;
 }
 
-/* #marker {
-  background-color: red;
-  width: 2400px;
-  height: 2400px;
-} */
-/* .marker {
-  background-image: url("svg/marker.svg");
-  background-size: cover;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-} */
 .iconimg {
   width: 25px;
   height: 25px;
@@ -368,4 +355,27 @@ input[type="radio"]:checked {
   width: 50px !important;
   margin-top: 22.5px !important;
   height: 58.5px !important;
+}
+.marker-i {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+#marker {
+  background-color: red;
+  width: 2400px;
+  height: 2400px;
+}
+.marker {
+  background-image: url("./assets/marker.svg");
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.LKP {
+  width: 20px;
+  height: 200px;
 }

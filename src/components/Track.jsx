@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactMapboxGl, {
   ZoomControl,
   Layer,
+  Marker,
   Feature,
   Popup,
 } from "react-mapbox-gl";
@@ -10,7 +11,7 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import { getCirclePaint, getPolygonPaint } from "../properties/properties";
 import { calculateRadius, parseGeoJson } from "../properties/Helper";
-
+import marker from "../assets/marker.svg";
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
@@ -232,6 +233,7 @@ const Track = (props) => {
               {Math.floor(item.prob * 1000) / 1000}
             </Popup>
           ))}
+
         {state.initialRadius && state.initialDatum.circle && (
           <Layer
             type="circle"
@@ -341,6 +343,15 @@ const Track = (props) => {
             <p>{c.trustValue}</p>
           </Popup>
         ))}
+
+        {state.homeData && (
+          <Marker
+            coordinates={[state.homeData.longitude, state.homeData.latitude]}
+            anchor="center"
+          >
+            <img className="LKP" src={marker} />
+          </Marker>
+        )}
       </Map>
     </div>
   );
