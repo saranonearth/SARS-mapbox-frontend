@@ -14,6 +14,11 @@ import { getCirclePaint, getPolygonPaint } from "../properties/properties";
 import { calculateRadius, parseGeoJson } from "../properties/Helper";
 import marker from "../assets/marker.svg";
 import Information from "./Information";
+import Hospital from "../assets/hospital.svg";
+import Airport from "../assets/airport.svg";
+import Firestation from "../assets/fire.svg";
+import Police from "../assets/jail.svg";
+import SearchPattern from "./SearchPattern";
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
@@ -31,6 +36,8 @@ const Track = (props) => {
     initialDatum: "",
     initialRadius: null,
     information: null,
+    searchPatternData: null,
+    nearBy: null,
   });
   const calculateRadiusInitial = (X, Y, DE) => {
     let initRadius;
@@ -77,8 +84,14 @@ const Track = (props) => {
           initRadius = calculateRadiusInitial(x, y, driftError);
         }
 
+        const nearBy = await axios.get(
+          `${API_BASE_URL}/geo-info/get-contacts/${dataFromHome.longitude}/${dataFromHome.latitude}`
+        );
+        console.log("FETCHED NEAR BY", nearBy.data);
+
         setState({
           ...state,
+          nearBy: nearBy.data.data,
           homeData: dataFromHome,
           initialDatum: fetchedData,
           initialRadius: initRadius,
@@ -104,7 +117,34 @@ const Track = (props) => {
     accessToken: token,
   });
 
+  const compare = (a, b) => {
+    if (a.trustValue > b.trustValue) {
+      return -1;
+    }
+    if (a.trustValue < b.trustValue) {
+      return 1;
+    }
+    return 0;
+  };
+
   const setPoints = (data) => {
+    const newPointsList = [
+      {
+        latitude: data.lat,
+        longitude: data.long,
+        trustValue: data.trustValue,
+        radius: data.radius,
+        calRadius: calculateRadius(data, new Date()),
+        time: new Date(),
+        iTime: new Date(data.iTime),
+        id: Math.random(),
+        color: data.trustValue,
+      },
+      ...state.points,
+    ];
+
+    newPointsList.sort(compare);
+    console.log(newPointsList);
     console.log("DATA FROM MENU", data);
     setState({
       ...state,
@@ -113,20 +153,7 @@ const Track = (props) => {
         long: data.long,
         zoom: 10,
       },
-      points: [
-        {
-          latitude: data.lat,
-          longitude: data.long,
-          trustValue: data.trustValue,
-          radius: data.radius,
-          calRadius: calculateRadius(data, new Date()),
-          time: new Date(),
-          iTime: new Date(data.iTime),
-          id: Math.random(),
-          color: data.trustValue,
-        },
-        ...state.points,
-      ],
+      points: newPointsList,
     });
   };
 
@@ -247,21 +274,53 @@ const Track = (props) => {
       points: newList,
       starting: {
         ...state.starting,
-        zoom: 7,
+        zoom: 8,
       },
     });
   };
 
-  const handlePopUp = () => {
+  const handlePopUp = (data) => {
+    console.log("popup click", data);
     setState({
       ...state,
-      information: {
-        text: "Hospital",
-      },
+      information: data,
       starting: {
-        lat: 10,
-        long: 75,
-        zoom: 6,
+        lat: data.geometry.location.lat,
+        long: data.geometry.location.lng,
+        zoom: 10,
+      },
+    });
+  };
+
+  const searchPatternPopup = (data) => {
+    console.log(data);
+    setState({
+      ...state,
+      searchPatternData: data,
+      starting: {
+        lat: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.latitude)
+          : 10,
+        long: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.longitude)
+          : 75,
+        zoom: 8,
+      },
+    });
+  };
+  const searchPatternPopupClose = (data) => {
+    console.log(data);
+    setState({
+      ...state,
+      searchPatternData: null,
+      starting: {
+        lat: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.latitude)
+          : 10,
+        long: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.longitude)
+          : 75,
+        zoom: 10,
       },
     });
   };
@@ -271,9 +330,13 @@ const Track = (props) => {
       ...state,
       information: null,
       starting: {
-        lat: 10,
-        long: 75,
-        zoom: 6,
+        lat: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.latitude)
+          : 10,
+        long: state.initialDatum.circle
+          ? eval(state.initialDatum.circle.longitude)
+          : 75,
+        zoom: 10,
       },
     });
   };
@@ -287,12 +350,18 @@ const Track = (props) => {
         data={state.flightData}
         changeColorOnClick={changeColorOnClick}
         points={state.points}
+        searchPatternPopup={searchPatternPopup}
       />
 
-      {/* {state.information && (
+      {state.information && (
         <Information data={state.information} close={handleInfoCardClose} />
-      )} */}
-
+      )}
+      {state.searchPatternData && (
+        <SearchPattern
+          data={state.searchPatternData}
+          close={searchPatternPopupClose}
+        />
+      )}
       <Map
         style="mapbox://styles/mapbox/satellite-v9"
         center={[state.starting.long, state.starting.lat]}
@@ -303,14 +372,6 @@ const Track = (props) => {
         }}
       >
         <ZoomControl />
-
-        {/* <Marker
-          onClick={() => handlePopUp()}
-          coordinates={[75, 10]}
-          anchor="center"
-        >
-          <img className="LKP" src={marker} />
-        </Marker> */}
 
         {state.grid.length > 0 &&
           state.grid.map((item, i) => (
@@ -448,6 +509,67 @@ const Track = (props) => {
             <img className="LKP" src={marker} />
           </Marker>
         )}
+
+        {state.nearBy &&
+          state.nearBy.hospital.length > 0 &&
+          state.nearBy.hospital.map((item, i) => (
+            <Marker
+              key={i + Math.random()}
+              onClick={() => handlePopUp(item)}
+              coordinates={[
+                item.geometry.location.lng,
+                item.geometry.location.lat,
+              ]}
+              anchor="center"
+            >
+              <img className="LKP" src={Hospital} />
+            </Marker>
+          ))}
+        {state.nearBy &&
+          state.nearBy.fire.length > 0 &&
+          state.nearBy.fire.map((item, i) => (
+            <Marker
+              key={i + Math.random()}
+              onClick={() => handlePopUp(item)}
+              coordinates={[
+                item.geometry.location.lng,
+                item.geometry.location.lat,
+              ]}
+              anchor="center"
+            >
+              <img className="LKP" src={Firestation} />
+            </Marker>
+          ))}
+        {state.nearBy &&
+          state.nearBy.police.length > 0 &&
+          state.nearBy.police.map((item, i) => (
+            <Marker
+              key={i + Math.random()}
+              onClick={() => handlePopUp(item)}
+              coordinates={[
+                item.geometry.location.lng,
+                item.geometry.location.lat,
+              ]}
+              anchor="center"
+            >
+              <img className="LKP" src={Police} />
+            </Marker>
+          ))}
+        {state.nearBy &&
+          state.nearBy.air.length > 0 &&
+          state.nearBy.air.map((item, i) => (
+            <Marker
+              key={i + Math.random()}
+              onClick={() => handlePopUp(item)}
+              coordinates={[
+                item.geometry.location.lng,
+                item.geometry.location.lat,
+              ]}
+              anchor="center"
+            >
+              <img className="LKP" src={Airport} />
+            </Marker>
+          ))}
       </Map>
     </div>
   );

@@ -23,6 +23,7 @@ const Sidebar = (props) => {
           changeColorOnClick={props.changeColorOnClick}
           removePoint={props.removePoint}
           points={props.points}
+          searchPatternPopup={props.searchPatternPopup}
           updateGrid={props.updateGrid}
           setPoints={props.setPoints}
           data={props.data}

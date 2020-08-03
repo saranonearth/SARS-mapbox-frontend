@@ -414,7 +414,7 @@ input[type="radio"]:checked {
 }
 
 .section-c {
-  width: 88%;
+  width: 70%;
 }
 .section-c :hover {
   cursor: pointer;
@@ -422,7 +422,9 @@ input[type="radio"]:checked {
 .section-r {
   width: 2%;
 }
-
+.section-s {
+  width: 10%;
+}
 .cursor-pointer:hover {
   cursor: pointer;
 }
