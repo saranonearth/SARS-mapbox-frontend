@@ -40,6 +40,7 @@ const Track = (props) => {
     searchPatternData: null,
     nearBy: null,
     images: null,
+    modelimages: null,
   });
   const calculateRadiusInitial = (X, Y, DE) => {
     let initRadius;
@@ -233,19 +234,20 @@ const Track = (props) => {
         const parsedGeoJsonData = parseGeoJson(response.data);
         console.log(parsedGeoJsonData.grid.slice(0, 50));
 
-        if (state.grid.length > 1) {
+        let modelImages;
+        if (state.grid.length > 0) {
           const images = await axios.post(
             "https://cv-sih.herokuapp.com/models",
             {}
           );
-
-          console.log(images);
+          modelImages = images;
         }
 
         setState({
           ...state,
           grid: parsedGeoJsonData.grid,
           gridData: parsedGeoJsonData.gridData,
+          modelimages: modelImages ? modelImages.data : null,
         });
       } catch (error) {
         console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
@@ -374,6 +376,7 @@ const Track = (props) => {
         changeColorOnClick={changeColorOnClick}
         points={state.points}
         searchPatternPopup={searchPatternPopup}
+        modelimages={state.modelimages}
       />
 
       {state.information && (

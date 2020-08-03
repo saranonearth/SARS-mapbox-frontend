@@ -20,6 +20,7 @@ const Sidebar = (props) => {
         </div>
       ) : (
         <Menu
+          modelimages={props.modelimages}
           changeColorOnClick={props.changeColorOnClick}
           removePoint={props.removePoint}
           points={props.points}

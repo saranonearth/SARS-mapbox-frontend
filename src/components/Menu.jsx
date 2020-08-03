@@ -9,6 +9,7 @@ const Menu = ({
   removePoint,
   changeColorOnClick,
   searchPatternPopup,
+  modelimages,
 }) => {
   const [state, setState] = useState({
     lat: "",
@@ -27,7 +28,7 @@ const Menu = ({
   const [panel, setPanel] = useState("form");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("MENU", state);
+
     const { latD, latDD, latMMMMM, longD, longMMMMM, longDD } = state;
 
     const coordWithSpaces2 = new Coordinate(
@@ -70,6 +71,8 @@ const Menu = ({
       [e.target.name]: e.target.value,
     });
   };
+
+  console.log("IMAGES IN MENU", modelimages);
   return (
     <div className="menu-cont">
       <div className="close-cont">
@@ -252,6 +255,20 @@ const Menu = ({
                       ></i>
                     </div>
                   </div>
+                ))}
+              {modelimages &&
+                modelimages.map((img, i) => (
+                  <p
+                    className="white"
+                    onClick={() =>
+                      window.open(
+                        `https://cv-sih.herokuapp.com/${img.image}`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    Satelite Image {i + 1}
+                  </p>
                 ))}
             </div>
           </>
