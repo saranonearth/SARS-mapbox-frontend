@@ -4,7 +4,7 @@
   margin: 0;
 }
 html {
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 body {
   font-family: "Lato", sans-serif;
@@ -436,4 +436,35 @@ input[type="radio"]:checked {
   overflow: auto;
   margin-top: 10px;
   height: 90vh;
+}
+.bg-white {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.info-card {
+  background-color: #fff;
+  position: absolute;
+  top: 2%;
+  left: 1%;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  z-index: 100 !important;
+}
+.move-end {
+  display: flex;
+  justify-content: flex-end;
+}
+.info-content {
+  color: #333;
+  width: 290px;
+}
+.info-banner {
+  width: 290px;
+  height: 290px;
+}
+.info-tittle {
+  font-size: 1.5em;
 }

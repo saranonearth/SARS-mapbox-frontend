@@ -72,8 +72,6 @@ const Home = (props) => {
       longMMMMM,
       latDD,
       longDD,
-      latitude,
-      longitude,
       altitude,
       groundSpeed,
       verticalSpeed,

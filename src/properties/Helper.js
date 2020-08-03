@@ -39,7 +39,7 @@ export const parseGeoJson = (geojson) => {
       {
         x: (coord[0][0][0] + coord[0][2][0]) / 2,
         y: (coord[0][0][1] + coord[0][2][1]) / 2,
-        prob: item.prob_dist,
+        prob: item.prob,
       },
       ...gridData,
     ];

@@ -5,6 +5,7 @@ import ReactMapboxGl, {
   Marker,
   Feature,
   Popup,
+  MapContext,
 } from "react-mapbox-gl";
 import axios from "axios";
 
@@ -12,6 +13,7 @@ import Sidebar from "./Sidebar";
 import { getCirclePaint, getPolygonPaint } from "../properties/properties";
 import { calculateRadius, parseGeoJson } from "../properties/Helper";
 import marker from "../assets/marker.svg";
+import Information from "./Information";
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
@@ -28,7 +30,19 @@ const Track = (props) => {
     gridData: [],
     initialDatum: "",
     initialRadius: null,
+    information: null,
   });
+  const calculateRadiusInitial = (X, Y, DE) => {
+    let initRadius;
+    const x = X || 1;
+    const y = Y || 1;
+    const de = DE || 1;
+    console.log(X, Y, DE);
+
+    initRadius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(de, 2));
+
+    return initRadius;
+  };
 
   useEffect(() => {
     let fetchedData;
@@ -51,18 +65,16 @@ const Track = (props) => {
         );
         console.log(response);
         fetchedData = response.data.data;
+        console.log("FETCHED DATA", fetchedData);
+        if (fetchedData.line) {
+          const { x, y, driftError } = fetchedData.line;
+          initRadius = calculateRadiusInitial(x, y, driftError);
+        }
 
-        console.log(fetchedData);
         if (fetchedData.circle) {
           const { x, y, driftError } = fetchedData.circle;
-          const X = x || 1;
-          const Y = y || 1;
-          const DE = driftError || 1;
-          console.log(X, Y, DE);
-          initRadius = Math.sqrt(
-            Math.pow(X, 2) + Math.pow(Y, 2) + Math.pow(DE, 2)
-          );
-          console.log("Radius", initRadius);
+
+          initRadius = calculateRadiusInitial(x, y, driftError);
         }
 
         setState({
@@ -154,28 +166,48 @@ const Track = (props) => {
       ...data,
     ];
 
+    // let body;
+    // if (state.initialDatum.line) {
+    //   body = {
+    //     line: [
+    //       [
+    //         state.initialDatum.line.sourceLatitude,
+    //         state.initialDatum.line.sourceLongitude,
+    //       ],
+    //       [
+    //         state.initialDatum.line.destinationLatitude,
+    //         state.initialDatum.line.destinationLongitude,
+    //       ],
+    //     ],
+    //   };
+    // }
+
     console.log("DATA I AM SENDING FOR UPDATING GRID", data);
 
-    try {
-      const response = await axios.post(
-        "https://cv-sih.herokuapp.com/circle",
-        {
-          circle: data,
-        },
-        config
-      );
+    if (data.length >= 2) {
+      try {
+        const response = await axios.post(
+          "https://cv-sih.herokuapp.com/grid",
+          {
+            line: [],
+            circles: data,
+          },
+          config
+        );
 
-      console.log(response.data);
+        console.log(response.data);
 
-      const parsedGeoJsonData = parseGeoJson(response.data);
+        const parsedGeoJsonData = parseGeoJson(response.data);
+        console.log(parsedGeoJsonData.grid.slice(0, 50));
 
-      setState({
-        ...state,
-        grid: parsedGeoJsonData.grid,
-        gridData: parsedGeoJsonData.gridData,
-      });
-    } catch (error) {
-      console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
+        setState({
+          ...state,
+          grid: parsedGeoJsonData.grid,
+          gridData: parsedGeoJsonData.gridData,
+        });
+      } catch (error) {
+        console.log("IN TRACK ERROR WHEN UPDATING GRID", error);
+      }
     }
   };
 
@@ -189,6 +221,10 @@ const Track = (props) => {
     setState({
       ...state,
       points: newPointsList,
+      starting: {
+        ...state.starting,
+        zoom: 7,
+      },
     });
   };
 
@@ -215,6 +251,33 @@ const Track = (props) => {
       },
     });
   };
+
+  const handlePopUp = () => {
+    setState({
+      ...state,
+      information: {
+        text: "Hospital",
+      },
+      starting: {
+        lat: 10,
+        long: 75,
+        zoom: 6,
+      },
+    });
+  };
+
+  const handleInfoCardClose = () => {
+    setState({
+      ...state,
+      information: null,
+      starting: {
+        lat: 10,
+        long: 75,
+        zoom: 6,
+      },
+    });
+  };
+
   return (
     <div>
       <Sidebar
@@ -225,6 +288,10 @@ const Track = (props) => {
         changeColorOnClick={changeColorOnClick}
         points={state.points}
       />
+
+      {/* {state.information && (
+        <Information data={state.information} close={handleInfoCardClose} />
+      )} */}
 
       <Map
         style="mapbox://styles/mapbox/satellite-v9"
@@ -237,23 +304,13 @@ const Track = (props) => {
       >
         <ZoomControl />
 
-        {/* <Layer type="line" layout={lineLayout} paint={linePaint}>
-          <Feature
-            coordinates={
-              state.flightData &&
-              state.flightData.data.flightPath.map((point) => [
-                point.long,
-                point.lat,
-              ])
-            }
-          />
-        </Layer> */}
-
-        {/* <Layer type="line" layout={lineLayout} paint={linePaint}>
-          <Feature
-            coordinates={dummy.map((point) => [point.long, point.lat])}
-          />
-        </Layer> */}
+        {/* <Marker
+          onClick={() => handlePopUp()}
+          coordinates={[75, 10]}
+          anchor="center"
+        >
+          <img className="LKP" src={marker} />
+        </Marker> */}
 
         {state.grid.length > 0 &&
           state.grid.map((item, i) => (
