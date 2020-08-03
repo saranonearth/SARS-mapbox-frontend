@@ -84,12 +84,24 @@ const Track = (props) => {
           lineWidth = calculateRadiusInitial(x, y, driftError);
         }
 
+        let initialCirclePoint;
         if (fetchedData.circle) {
           const { x, y, driftError } = fetchedData.circle;
 
           initRadius = calculateRadiusInitial(x, y, driftError);
-        }
 
+          initialCirclePoint = {
+            latitude: fetchedData.circle.latitude,
+            longitude: fetchedData.circle.longitude,
+            trustValue: fetchedData.circle.trustVal,
+            radius: initRadius,
+            calRadius: initRadius,
+            time: new Date(),
+            iTime: new Date(),
+            id: Math.random(),
+            color: 105,
+          };
+        }
         const nearBy = await axios.get(
           `${API_BASE_URL}/geo-info/get-contacts/${dataFromHome.longitude}/${dataFromHome.latitude}`
         );
@@ -102,6 +114,7 @@ const Track = (props) => {
           initialDatum: fetchedData,
           lineWidth: lineWidth ? lineWidth : null,
           initialRadius: initRadius ? initRadius : null,
+          points: [initialCirclePoint],
           starting: {
             lat: fetchedData.circle ? eval(fetchedData.circle.latitude) : 10,
             long: fetchedData.circle ? eval(fetchedData.circle.longitude) : 75,
@@ -186,19 +199,6 @@ const Track = (props) => {
         ...data,
       ];
     });
-
-    data = [
-      {
-        center: [
-          eval(state.initialDatum.circle.latitude),
-          eval(state.initialDatum.circle.longitude),
-        ],
-        radius: state.initialRadius,
-        strip: [0.2, 0.1, 0.2],
-        trust: state.initialDatum.circle.trustVal,
-      },
-      ...data,
-    ];
 
     // let body;
     // if (state.initialDatum.line) {
@@ -417,7 +417,7 @@ const Track = (props) => {
             </Popup>
           ))}
 
-        {state.initialRadius && state.initialDatum.circle && (
+        {/* {state.initialRadius && state.initialDatum.circle && (
           <Layer
             type="circle"
             paint={getCirclePaint({
@@ -467,7 +467,7 @@ const Track = (props) => {
               ]}
             />
           </Layer>
-        )}
+        )} */}
         {state.points.map((c, i) => (
           <Popup
             key={i}
