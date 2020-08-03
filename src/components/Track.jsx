@@ -19,6 +19,7 @@ import Airport from "../assets/airport.svg";
 import Firestation from "../assets/fire.svg";
 import Police from "../assets/jail.svg";
 import SearchPattern from "./SearchPattern";
+import { LngLatBounds } from "mapbox-gl";
 const Track = (props) => {
   const dataFromHome = props.history.location.state.data;
   const API_BASE_URL = "https://sars-headquaters-server.herokuapp.com";
@@ -114,10 +115,18 @@ const Track = (props) => {
           initialDatum: fetchedData,
           lineWidth: lineWidth ? lineWidth : null,
           initialRadius: initRadius ? initRadius : null,
-          points: [initialCirclePoint],
+          points: initialCirclePoint ? [initialCirclePoint] : [],
           starting: {
-            lat: fetchedData.circle ? eval(fetchedData.circle.latitude) : 10,
-            long: fetchedData.circle ? eval(fetchedData.circle.longitude) : 75,
+            lat: fetchedData.circle
+              ? eval(fetchedData.circle.latitude)
+              : fetchedData.line
+              ? fetchedData.line.sourceLatitude
+              : 10,
+            long: fetchedData.circle
+              ? eval(fetchedData.circle.longitude)
+              : fetchedData.line
+              ? fetchedData.line.sourceLongitude
+              : 75,
             zoom: 8,
           },
         });
@@ -216,6 +225,22 @@ const Track = (props) => {
     //   };
     // }
 
+    let lineData = null;
+
+    if (state.initialDatum.line) {
+      lineData = [
+        [
+          state.initialDatum.line.sourceLatitude,
+          state.initialDatum.line.sourceLongitude,
+        ],
+        [
+          state.initialDatum.line.destinationLatitude,
+          state.initialDatum.line.destinationLongitude,
+        ],
+        state.lineWidth,
+      ];
+    }
+
     console.log("DATA I AM SENDING FOR UPDATING GRID", data);
 
     if (data.length >= 2) {
@@ -223,7 +248,7 @@ const Track = (props) => {
         const response = await axios.post(
           "https://cv-sih.herokuapp.com/grid",
           {
-            line: [],
+            line: lineData ? lineData : [],
             circles: data,
           },
           config
@@ -365,6 +390,15 @@ const Track = (props) => {
       },
     });
   };
+  const lineLayout = {
+    "line-cap": "round",
+    "line-join": "round",
+  };
+
+  const linePaint = {
+    "line-color": "#4790E5",
+    "line-width": 4,
+  };
 
   return (
     <div>
@@ -417,6 +451,22 @@ const Track = (props) => {
             </Popup>
           ))}
 
+        {state.initialDatum.line && (
+          <Layer type="line" layout={lineLayout} paint={linePaint}>
+            <Feature
+              coordinates={[
+                [
+                  state.initialDatum.line.sourceLongitude,
+                  state.initialDatum.line.sourceLatitude,
+                ],
+                [
+                  state.initialDatum.line.destinationLongitude,
+                  state.initialDatum.line.destinationLatitude,
+                ],
+              ]}
+            />
+          </Layer>
+        )}
         {/* {state.initialRadius && state.initialDatum.circle && (
           <Layer
             type="circle"
