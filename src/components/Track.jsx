@@ -36,8 +36,10 @@ const Track = (props) => {
     initialDatum: "",
     initialRadius: null,
     information: null,
+    lineWidth: null,
     searchPatternData: null,
     nearBy: null,
+    images: null,
   });
   const calculateRadiusInitial = (X, Y, DE) => {
     let initRadius;
@@ -54,6 +56,8 @@ const Track = (props) => {
   useEffect(() => {
     let fetchedData;
     let initRadius;
+    let lineWidth;
+    let rect;
 
     const fetchData = async () => {
       try {
@@ -73,9 +77,10 @@ const Track = (props) => {
         console.log(response);
         fetchedData = response.data.data;
         console.log("FETCHED DATA", fetchedData);
+
         if (fetchedData.line) {
           const { x, y, driftError } = fetchedData.line;
-          initRadius = calculateRadiusInitial(x, y, driftError);
+          lineWidth = calculateRadiusInitial(x, y, driftError);
         }
 
         if (fetchedData.circle) {
@@ -94,7 +99,8 @@ const Track = (props) => {
           nearBy: nearBy.data.data,
           homeData: dataFromHome,
           initialDatum: fetchedData,
-          initialRadius: initRadius,
+          lineWidth: lineWidth ? lineWidth : null,
+          initialRadius: initRadius ? initRadius : null,
           starting: {
             lat: fetchedData.circle ? eval(fetchedData.circle.latitude) : 10,
             long: fetchedData.circle ? eval(fetchedData.circle.longitude) : 75,
@@ -227,6 +233,15 @@ const Track = (props) => {
         const parsedGeoJsonData = parseGeoJson(response.data);
         console.log(parsedGeoJsonData.grid.slice(0, 50));
 
+        if (state.grid.length > 1) {
+          const images = await axios.post(
+            "https://cv-sih.herokuapp.com/models",
+            {}
+          );
+
+          console.log(images);
+        }
+
         setState({
           ...state,
           grid: parsedGeoJsonData.grid,
@@ -254,7 +269,10 @@ const Track = (props) => {
       },
     });
   };
-
+  const polygonPaint = {
+    "fill-color": "#6F788A",
+    "fill-opacity": 0.7,
+  };
   //Function to change point circle color on click
   const changeColorOnClick = (id) => {
     const oldPointsList = state.points;
@@ -292,18 +310,23 @@ const Track = (props) => {
     });
   };
 
-  const searchPatternPopup = (data) => {
-    console.log(data);
+  const searchPatternPopup = async (data) => {
+    console.log("searchPatternPopup", data);
+
+    const searchPatern = await axios.get(
+      `https://sars-headquaters-server.herokuapp.com/search-pattern/${data.longitude}/${data.latitude}/${data.radius}/${data.trust}`
+    );
+
     setState({
       ...state,
-      searchPatternData: data,
+      searchPatternData: searchPatern.data.data,
       starting: {
-        lat: state.initialDatum.circle
-          ? eval(state.initialDatum.circle.latitude)
-          : 10,
-        long: state.initialDatum.circle
-          ? eval(state.initialDatum.circle.longitude)
-          : 75,
+        lat: data.latitude
+          ? data.latitude
+          : eval(state.initialDatum.circle.latitude),
+        long: data.longitude
+          ? data.longitude
+          : eval(state.initialDatum.circle.longitude),
         zoom: 8,
       },
     });
@@ -570,6 +593,12 @@ const Track = (props) => {
               <img className="LKP" src={Airport} />
             </Marker>
           ))}
+
+        {state.searchPatternData && (
+          <Layer type="fill" paint={polygonPaint}>
+            <Feature coordinates={[eval(state.searchPatternData.box)]} />
+          </Layer>
+        )}
       </Map>
     </div>
   );

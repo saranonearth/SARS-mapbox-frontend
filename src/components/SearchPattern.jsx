@@ -1,6 +1,7 @@
 import React from "react";
 
-const SearchPattern = ({ close }) => {
+const SearchPattern = ({ close, data }) => {
+  console.log("SP DATA", data);
   return (
     <div>
       <div className="info-card">
@@ -10,19 +11,17 @@ const SearchPattern = ({ close }) => {
               <i onClick={close} class="fa fa-times" aria-hidden="true"></i>
             </div>
           </div>
-          <div>
-            <img
-              className="info-banner"
-              src="https://via.placeholder.com/150"
-              alt="info"
-            />
-          </div>
-          <h1 className="info-tittle">Lorem, ipsum dolor.</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos
-            rerum eos consequatur aperiam nihil incidunt unde culpa. Sint sit
-            possimus a quis tenetur natus vitae nulla, quod enim in consectetur!
-          </p>
+          <h1>Terrain: {data && data.terrain}</h1>
+          {data &&
+            data.searchPattern &&
+            data.searchPattern.length > 0 &&
+            data.searchPattern.map((item, i) => (
+              <div key={i + Math.random()}>
+                <h1 className="info-tittle">Name: {item.name || item.Name}</h1>
+                <p>Description: {item.description}</p>
+                <p>Terrain:{item.terrain}</p>
+              </div>
+            ))}
         </div>
       </div>
     </div>

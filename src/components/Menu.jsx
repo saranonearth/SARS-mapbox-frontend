@@ -10,7 +10,6 @@ const Menu = ({
   changeColorOnClick,
   searchPatternPopup,
 }) => {
-  console.log("POINTS FROM MENU", points);
   const [state, setState] = useState({
     lat: "",
     long: "",
@@ -237,7 +236,7 @@ const Menu = ({
                     </div>
                     <div className="section-s">
                       <i
-                        onClick={(item) => searchPatternPopup(item)}
+                        onClick={() => searchPatternPopup(item)}
                         class="fa c-search fa-search"
                         aria-hidden="true"
                       ></i>
